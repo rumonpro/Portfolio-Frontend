@@ -1,6 +1,6 @@
 // Portfolio Data Loading
-const IS_LOCAL_ENV = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-const BACKEND_BASE_URL = IS_LOCAL_ENV ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
+var IS_LOCAL_ENV = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+var BACKEND_BASE_URL = IS_LOCAL_ENV ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
 
 async function loadProjects() {
     const portfolioGrid = document.getElementById('portfolioGrid');

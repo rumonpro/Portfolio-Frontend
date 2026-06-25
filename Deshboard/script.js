@@ -454,13 +454,13 @@ async function startEditBlog(id) {
         if (!response.ok || !blog) throw new Error("Failed to load blog details");
 
         state.editingBlogId = id;
-        
+
         // Populate form fields
         document.getElementById("blog-title").value = blog.title || "";
         document.getElementById("blog-content").value = blog.content || "";
         document.getElementById("blog-tags").value = Array.isArray(blog.tags) ? blog.tags.join(", ") : "";
         dom.blogImageUrl.value = blog.image || "";
-        
+
         // Update live preview
         if (blog.image) {
             dom.previewBlogImg.src = resolveImageUrl(blog.image);
@@ -519,7 +519,7 @@ async function startEditProject(id) {
         if (!response.ok || !project) throw new Error("Failed to load project details");
 
         state.editingProjectId = id;
-        
+
         // Populate form fields
         document.getElementById("project-name").value = project.name || "";
         document.getElementById("project-description").value = project.description || "";
@@ -527,7 +527,7 @@ async function startEditProject(id) {
         document.getElementById("project-live").value = project.liveLink || "";
         document.getElementById("project-github").value = project.githubLink || "";
         dom.projectImageUrl.value = project.image || "";
-        
+
         // Update live preview
         if (project.image) {
             dom.previewProjectImg.src = resolveImageUrl(project.image);
