@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Rumon</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .login-page {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-darker);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(183, 74, 235, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%);
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            padding: 3rem;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-header .logo-icon {
+            margin: 0 auto 1.5rem;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--text-dim);
+        }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            text-align: center;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+                <h2>Admin Login</h2>
+                <p>Welcome back to Rumon</p>
+            </div>
+
+            <div id="error-msg" class="error-msg"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <div style="position:relative;">
+                        <i class="fas fa-user" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--text-dim);"></i>
+                        <input type="text" id="username" placeholder="Enter username" style="padding-left:3rem;" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label>Password</label>
+                    <div style="position:relative;">
+                        <i class="fas fa-lock" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--text-dim);"></i>
+                        <input type="password" id="password" placeholder="••••••••" style="padding-left:3rem;" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">
+                    Access Dashboard <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = "https://backend-twze.vercel.app/api";
+        const loginForm = document.getElementById('login-form');
+        const errorMsg = document.getElementById('error-msg');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            errorMsg.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                // Success
+                localStorage.setItem('adminToken', data.token);
+                localStorage.setItem('adminUser', JSON.stringify({
+                    username: data.username,
+                    role: data.role
+                }));
+
+                window.location.href = 'index.html';
+            } catch (error) {
+                errorMsg.innerText = error.message;
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        // Check if already logged in
+        if (localStorage.getItem('adminToken')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

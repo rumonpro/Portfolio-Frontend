@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Details | Rumon</title>
+    <link rel="icon" type="image/png" href="Assets/fav icon.png">
+    
+    <!-- External Resources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Component CSS -->
+    <link rel="stylesheet" href="container/header/header.css">
+    <link rel="stylesheet" href="container/footer/footer.css">
+    <link rel="stylesheet" href="blog-details.css">
+</head>
+
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Page Header -->
+    <div id="header-container"></div>
+    
+    <section class="page-header">
+        <div class="container">
+            <h1 id="blog-main-title">Blog Details</h1>
+            <div class="breadcrumbs">
+                <a href="Index.html">Home</a>
+                <span>/</span>
+                <span id="breadcrumb-current">Blog Details</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <div class="main-layout container">
+        <div class="content-area">
+            <div class="featured-image">
+                <img id="blog-featured-img" src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000" alt="Blog Image">
+            </div>
+
+            <div class="post-meta">
+                <span><i class="far fa-user"></i> ADMIN</span>
+                <span><i class="far fa-calendar"></i> <span id="blog-date">LOADING...</span></span>
+                <span class="category-tag" id="blog-category"><i class="fas fa-folder"></i> CYBER SECURITY</span>
+            </div>
+
+            <article class="blog-article">
+                <div id="blog-content-body">
+                    <p>Loading blog content...</p>
+                </div>
+            </article>
+
+            <!-- Comments Section -->
+            <section class="comment-section">
+                <div class="comments-list-wrapper">
+                    <h3 id="comments-count">Comments (0)</h3>
+                    <div id="comments-display" class="comments-display">
+                        <!-- Comments will be loaded here -->
+                        <p class="no-comments">No comments yet. Be the first to comment!</p>
+                    </div>
+                </div>
+
+                <h3>Leave a Reply</h3>
+                <p>Your email address will not be published. Required fields are marked *</p>
+                <form class="comment-form" id="comment-form">
+                    <textarea id="comment-message" placeholder="Comment *" required></textarea>
+                    <div class="form-grid">
+                        <input type="text" id="comment-name" placeholder="Name *" required>
+                        <input type="email" id="comment-email" placeholder="Email *" required>
+                    </div>
+                    <input type="text" id="comment-website" placeholder="Website">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="save-info">
+                        <label for="save-info">Save my name, email, and website in this browser for the next time I comment.</label>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submit-comment">POST COMMENT</button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="widget search-widget">
+                <h3>Search</h3>
+                <div class="search-box">
+                    <input type="text" placeholder="Search for...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="widget recent-posts">
+                <h3>Recent Post</h3>
+                <div class="post-list" id="recent-posts-list">
+                    <!-- Dynamic Recent Posts -->
+                </div>
+            </div>
+
+            <div class="widget categories-widget">
+                <h3>Categories</h3>
+                <ul id="categories-list">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Cloud Security</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Cyber Safety</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Future Security</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Online Privacy</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Security Trends</a></li>
+                </ul>
+            </div>
+
+            <div class="widget tags-widget">
+                <h3>Popular Tags</h3>
+                <div class="tags-cloud" id="blog-tags-cloud">
+                    <a href="#">security</a>
+                </div>
+            </div>
+
+            <div class="ad-widget">
+                <div class="ad-content">
+                    <div class="ad-icon" style="font-size: 50px; margin-bottom: 20px; color: white;"><i class="fas fa-shield-heart"></i></div>
+                    <h4 style="margin-bottom: 10px;">Securing the Future Today</h4>
+                    <p>Hackers Don't Need Keys, Just Carelessness.</p>
+                    <button class="ad-btn" onclick="window.location.href='Index.html#contact'"><i class="far fa-eye"></i> CONTACT US</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script>
+        const API_BASE_URL = "https://backend-twze.vercel.app/api";
+        const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000";
+
+        function resolveImageUrl(rawUrl) {
+            if (!rawUrl || typeof rawUrl !== "string") return DEFAULT_IMAGE;
+            const trimmed = rawUrl.trim();
+            if (!trimmed) return DEFAULT_IMAGE;
+            if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
+            if (trimmed.startsWith("/uploads/")) return `https://backend-twze.vercel.app${trimmed}`;
+            if (trimmed.startsWith("uploads/")) return `https://backend-twze.vercel.app/${trimmed}`;
+            return trimmed;
+        }
+
+        function formatLongDate(value) {
+            return new Date(value).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric"
+            }).toUpperCase();
+        }
+
+        function renderContent(content) {
+            const paragraphs = String(content || "")
+                .split(/\n+/)
+                .map((p) => p.trim())
+                .filter(Boolean);
+
+            if (paragraphs.length === 0) {
+                return "<p>No content available.</p>";
+            }
+
+            return paragraphs.map((p) => `<p>${p}</p>`).join("");
+        }
+
+        function renderTags(tags) {
+            const cloud = document.getElementById("blog-tags-cloud");
+            const safeTags = Array.isArray(tags) ? tags.filter(Boolean) : [];
+            if (safeTags.length === 0) {
+                cloud.innerHTML = `<a href="#">security</a>`;
+                return;
+            }
+            cloud.innerHTML = safeTags.map((tag) => `<a href="#">${tag}</a>`).join("");
+        }
+
+        function renderBlog(blog) {
+            const title = blog?.title || "Blog Details";
+            const image = resolveImageUrl(blog?.image);
+            const tags = Array.isArray(blog?.tags) ? blog.tags : [];
+            const primaryTag = tags[0] || "CYBER SECURITY";
+
+            document.title = `${title} | Rumon`;
+            document.getElementById("blog-main-title").innerText = title;
+            document.getElementById("breadcrumb-current").innerText = title;
+            document.getElementById("blog-date").innerText = formatLongDate(blog?.createdAt || Date.now());
+            document.getElementById("blog-featured-img").src = image;
+            document.getElementById("blog-featured-img").alt = title;
+            document.getElementById("blog-category").innerHTML = `<i class="fas fa-folder"></i> ${primaryTag.toUpperCase()}`;
+            document.getElementById("blog-content-body").innerHTML = renderContent(blog?.content);
+            renderTags(tags);
+        }
+
+        async function fetchBlogDetails(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/blogs/${id}`);
+                if (!response.ok) throw new Error("Failed to fetch blog details");
+                const blog = await response.json();
+                renderBlog(blog);
+            } catch (error) {
+                console.error(error);
+                document.getElementById("blog-content-body").innerHTML = `<p>Error loading blog: ${error.message}</p>`;
+            }
+        }
+
+        async function fetchRecentPosts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/blogs`);
+                const blogs = await response.json();
+                const recentList = document.getElementById("recent-posts-list");
+                recentList.innerHTML = (blogs || []).slice(0, 4).map((blog) => `
+                    <div class="post-item" style="cursor: pointer;" onclick="window.location.href='blog-details.html?id=${blog._id}'">
+                        <img src="${resolveImageUrl(blog.image)}" alt="${blog.title || "Blog post"}">
+                        <div class="post-info">
+                            <h4>${blog.title || "Untitled"}</h4>
+                            <span><i class="far fa-calendar"></i> ${new Date(blog.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `).join("");
+
+                // Also update categories based on tags
+                updateCategories(blogs);
+            } catch (err) {
+                console.error("Error fetching recent posts:", err);
+            }
+        }
+
+        function updateCategories(blogs) {
+            const categoriesMap = {};
+            blogs.forEach(blog => {
+                if (blog.tags) {
+                    blog.tags.forEach(tag => {
+                        categoriesMap[tag] = (categoriesMap[tag] || 0) + 1;
+                    });
+                }
+            });
+
+            const categoriesList = document.getElementById('categories-list');
+            if (Object.keys(categoriesMap).length > 0) {
+                categoriesList.innerHTML = Object.entries(categoriesMap).slice(0, 5).map(([category, count]) => `
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> ${category}</a></li>
+                `).join('');
+            }
+        }
+
+        async function loadComponents() {
+            const components = [
+                { id: 'header-container', url: 'container/header/header.html', script: 'container/header/header.js' },
+                { id: 'footer-container', url: 'container/footer/footer.html', script: 'container/footer/footer.js' }
+            ];
+
+            for (const comp of components) {
+                try {
+                    const response = await fetch(comp.url);
+                    if (response.ok) {
+                        const html = await response.text();
+                        document.getElementById(comp.id).innerHTML = html;
+
+                        if (comp.script) {
+                            const script = document.createElement('script');
+                            script.src = comp.script;
+                            document.body.appendChild(script);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error loading component ${comp.id}:`, error);
+                }
+            }
+        }
+
+        async function fetchComments(blogId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/comments/${blogId}`);
+                if (!response.ok) throw new Error("Failed to fetch comments");
+                const comments = await response.json();
+                renderComments(comments);
+            } catch (error) {
+                console.error("Error fetching comments:", error);
+            }
+        }
+
+        function renderComments(comments) {
+            const commentsDisplay = document.getElementById("comments-display");
+            const commentsCount = document.getElementById("comments-count");
+            
+            commentsCount.innerText = `Comments (${comments.length})`;
+
+            if (comments.length === 0) {
+                commentsDisplay.innerHTML = `<p class="no-comments">No comments yet. Be the first to comment!</p>`;
+                return;
+            }
+
+            commentsDisplay.innerHTML = comments.map(comment => `
+                <div class="comment-item">
+                    <div class="comment-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <h4 class="comment-author">${comment.name}</h4>
+                            <span class="comment-date">${new Date(comment.createdAt).toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                        </div>
+                        <p class="comment-text">${comment.message}</p>
+                        ${comment.reply ? `
+                        <div class="admin-reply" style="margin-top: 15px; padding: 15px; background: rgba(183, 74, 235, 0.1); border-left: 4px solid var(--primary); border-radius: 8px;">
+                            <div class="reply-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i class="fas fa-shield-alt" style="color: var(--primary);"></i>
+                                <span style="font-weight: 600; color: var(--primary);">Admin Reply</span>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 15px;">${comment.reply}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        async function handleCommentSubmit(e, blogId) {
+            e.preventDefault();
+            const submitBtn = document.getElementById("submit-comment");
+            const originalText = submitBtn.innerText;
+            
+            const name = document.getElementById("comment-name").value;
+            const email = document.getElementById("comment-email").value;
+            const message = document.getElementById("comment-message").value;
+            const website = document.getElementById("comment-website").value;
+
+            try {
+                submitBtn.innerText = "POSTING...";
+                submitBtn.disabled = true;
+
+                const response = await fetch(`${API_BASE_URL}/comments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        blogId,
+                        name,
+                        email,
+                        message,
+                        website
+                    })
+                });
+
+                if (!response.ok) throw new Error("Failed to post comment");
+
+                // Clear form
+                document.getElementById("comment-form").reset();
+                
+                // Refresh comments
+                await fetchComments(blogId);
+
+                // Show success (optional, could use SweetAlert if available)
+                alert("Comment posted successfully!");
+
+            } catch (error) {
+                console.error("Error posting comment:", error);
+                alert("Failed to post comment. Please try again.");
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            loadComponents();
+            
+            const params = new URLSearchParams(window.location.search);
+            let blogId = params.get("id");
+            
+            if (!blogId) {
+                blogId = sessionStorage.getItem('selectedBlogId');
+            }
+
+            if (blogId) {
+                await fetchBlogDetails(blogId);
+                await fetchComments(blogId);
+
+                const commentForm = document.getElementById("comment-form");
+                commentForm.addEventListener("submit", (e) => handleCommentSubmit(e, blogId));
+            } else {
+                document.getElementById("blog-content-body").innerHTML = "<p>No blog selected. Please go back to the homepage.</p>";
+            }
+
+            fetchRecentPosts();
+        });
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            if (!cursorDot || !cursorOutline) return;
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.style.left = `${posX}px`;
+            cursorOutline.style.top = `${posY}px`;
+        });
+    </script>
+
+    <style>
+        /* Custom Cursor Styles */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #B74AEB;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(183, 74, 235, 0.5);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+        }
+
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        body, a, button {
+            cursor: none !important;
+        }
+    </style>
+</body>
+
+</html>

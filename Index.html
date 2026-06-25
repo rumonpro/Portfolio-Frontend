@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumon - Portfolio</title>
+    <link rel="icon" type="image/png" href="Assets/fav icon.png">
+    <!-- Modern Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Montserrat:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <!-- Component CSS -->
+    <link rel="stylesheet" href="container/header/header.css">
+    <link rel="stylesheet" href="container/hero/hero.css">
+    <link rel="stylesheet" href="container/experience/experience.css">
+    <link rel="stylesheet" href="container/skills/skills.css">
+    <link rel="stylesheet" href="container/portfolio/portfolio.css">
+    <link rel="stylesheet" href="container/blog/blog.css">
+    <link rel="stylesheet" href="container/contact/contact.css">
+    <link rel="stylesheet" href="container/footer/footer.css">
+
+    <style>
+        :root {
+            /* Typography scale (responsive) */
+            --fs-body: clamp(0.98rem, 0.25vw + 0.92rem, 1.125rem);
+            --fs-body-sm: clamp(0.9rem, 0.2vw + 0.85rem, 1rem);
+            --fs-label: clamp(0.75rem, 0.15vw + 0.7rem, 0.85rem);
+
+            --fs-section-title: clamp(2rem, 1.6vw + 1.6rem, 2.75rem);
+            --fs-section-subtitle: clamp(1rem, 0.35vw + 0.92rem, 1.125rem);
+            --fs-section-subhead: clamp(1.35rem, 0.7vw + 1.15rem, 1.75rem);
+            --fs-card-title: clamp(1.15rem, 0.4vw + 1.05rem, 1.35rem);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #0b0c16;
+            color: #ffffff;
+            overflow-x: hidden;
+            font-size: var(--fs-body);
+        }
+
+        /* Custom Cursor */
+        body,
+        a,
+        button,
+        input,
+        textarea,
+        select,
+        .skill-card,
+        .skill-item,
+        .nav-item,
+        .btn-header,
+        .social-icon {
+            cursor: none !important;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #b057d5;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(176, 87, 213, 0.5);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+        }
+
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Component Containers -->
+    <div id="header-container"></div>
+    <div id="hero-container"></div>
+    <div id="experience-container"></div>
+    <div id="skills-container"></div>
+    <div id="portfolio-container"></div>
+    <div id="blog-container"></div>
+    <div id="contact-container"></div>
+    <div id="footer-container"></div>
+
+    <script>
+        async function loadComponents() {
+            const components = [
+                { id: 'header-container', url: 'container/header/header.html', script: 'container/header/header.js' },
+                { id: 'hero-container', url: 'container/hero/hero.html', script: 'container/hero/hero.js' },
+                { id: 'experience-container', url: 'container/experience/experience.html', script: 'container/experience/experience.js' },
+                { id: 'skills-container', url: 'container/skills/skills.html' },
+                { id: 'blog-container', url: 'container/blog/blog.html', script: 'container/blog/blog.js' },
+                { id: 'portfolio-container', url: 'container/portfolio/portfolio.html', script: 'container/portfolio/portfolio.js' },
+                { id: 'contact-container', url: 'container/contact/contact.html', script: 'container/contact/contact.js' },
+                { id: 'footer-container', url: 'container/footer/footer.html', script: 'container/footer/footer.js' }
+            ];
+
+            for (const comp of components) {
+                try {
+                    const response = await fetch(comp.url);
+                    if (response.ok) {
+                        const html = await response.text();
+                        document.getElementById(comp.id).innerHTML = html;
+
+                        // Load component script if exists
+                        if (comp.script) {
+                            const script = document.createElement('script');
+                            script.src = comp.script;
+                            document.body.appendChild(script);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error loading component ${comp.id}:`, error);
+                }
+            }
+
+            // Scroll to hash if present after loading components
+            if (window.location.hash) {
+                setTimeout(() => {
+                    const target = document.querySelector(window.location.hash);
+                    if (target) {
+                        const headerOffset = document.getElementById('main-header')?.offsetHeight || 80;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                }, 100); // small delay to ensure rendering is complete
+            }
+        }
+
+        loadComponents();
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.style.left = `${posX}px`;
+            cursorOutline.style.top = `${posY}px`;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superadmin Setup | Rumon</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .setup-page {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-darker);
+        }
+        .setup-card {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-page">
+        <div class="setup-card">
+            <h2 style="margin-bottom: 1rem;">Initialize Superadmin</h2>
+            <p style="color: var(--text-dim); margin-bottom: 2rem;">Create the primary administrative account for Rumon.</p>
+            
+            <div id="msg" style="padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; display: none;"></div>
+
+            <form id="setup-form">
+                <div class="form-group">
+                    <label>Admin Username</label>
+                    <input type="text" id="username" placeholder="e.g. admin" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label>Admin Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Create Superadmin</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = "https://backend-twze.vercel.app/api";
+        const setupForm = document.getElementById('setup-form');
+        const msgDiv = document.getElementById('msg');
+
+        setupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/setup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    msgDiv.style.background = 'rgba(16,185,129,0.1)';
+                    msgDiv.style.color = '#10b981';
+                    msgDiv.innerText = "Superadmin created! Redirecting to login...";
+                    msgDiv.style.display = 'block';
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                msgDiv.style.background = 'rgba(239,68,68,0.1)';
+                msgDiv.style.color = '#ef4444';
+                msgDiv.innerText = error.message;
+                msgDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
