@@ -137,16 +137,18 @@
     <div id="footer-container"></div>
 
     <script>
-        const API_BASE_URL = "https://portfolio-backend-h88g.vercel.app/api";
+        const IS_LOCAL_ENV = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const BACKEND_BASE_URL = IS_LOCAL_ENV ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
+        const API_BASE_URL = `${BACKEND_BASE_URL}/api`;
         const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000";
 
         function resolveImageUrl(rawUrl) {
             if (!rawUrl || typeof rawUrl !== "string") return DEFAULT_IMAGE;
             const trimmed = rawUrl.trim();
             if (!trimmed) return DEFAULT_IMAGE;
-            if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-            if (trimmed.startsWith("/uploads/")) return `https://portfolio-backend-h88g.vercel.app${trimmed}`;
-            if (trimmed.startsWith("uploads/")) return `https://portfolio-backend-h88g.vercel.app/${trimmed}`;
+            if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("data:")) return trimmed;
+            if (trimmed.startsWith("/uploads/")) return `${BACKEND_BASE_URL}${trimmed}`;
+            if (trimmed.startsWith("uploads/")) return `${BACKEND_BASE_URL}/${trimmed}`;
             return trimmed;
         }
 

@@ -84,7 +84,7 @@
             <section id="blogs-section" class="content-section">
                 <div class="dashboard-grid">
                     <div class="form-container">
-                        <h3><i class="fas fa-plus"></i> Create New Blog</h3>
+                        <h3 id="blog-form-title"><i class="fas fa-plus"></i> Create New Blog</h3>
                         <form id="blog-form" novalidate>
                             <div class="form-group">
                                 <label>Title</label>
@@ -106,7 +106,10 @@
                                 <label>Tags (comma separated)</label>
                                 <input type="text" id="blog-tags" placeholder="cybersecurity, tech, news">
                             </div>
-                            <button type="submit" class="btn btn-primary" id="blog-submit">Create Blog</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="submit" class="btn btn-primary" id="blog-submit">Create Blog</button>
+                                <button type="button" class="btn" id="blog-cancel-edit" style="display: none; background: #333; color: white; padding: 0.8rem 1.5rem; border-radius: 50px;">Cancel</button>
+                            </div>
                         </form>
                     </div>
 
@@ -155,7 +158,7 @@
             <section id="projects-section" class="content-section">
                 <div class="dashboard-grid">
                     <div class="form-container">
-                        <h3><i class="fas fa-upload"></i> Upload New Project</h3>
+                        <h3 id="project-form-title"><i class="fas fa-upload"></i> Upload New Project</h3>
                         <form id="project-form" novalidate onsubmit="return false;">
                             <div class="form-group">
                                 <label>Project Name</label>
@@ -187,7 +190,10 @@
                                 <label>Tech Stack (comma separated)</label>
                                 <input type="text" id="project-tech" placeholder="React, Node.js, MongoDB">
                             </div>
-                            <button type="button" class="btn btn-primary" id="project-submit">Upload Project</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="button" class="btn btn-primary" id="project-submit">Upload Project</button>
+                                <button type="button" class="btn" id="project-cancel-edit" style="display: none; background: #333; color: white; padding: 0.8rem 1.5rem; border-radius: 50px;">Cancel</button>
+                            </div>
                         </form>
                     </div>
 

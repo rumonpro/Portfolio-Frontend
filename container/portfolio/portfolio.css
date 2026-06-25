@@ -51,7 +51,7 @@
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.03);
     overflow: hidden;
-    height: 240px; /* Fixed height for consistency */
+    height: 280px; /* Fixed height for consistency */
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -85,13 +85,36 @@
 /* Text Side */
 .card-content-box {
     flex: 1.2;
-    padding: 40px 30px;
+    padding: 30px 25px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     background: radial-gradient(circle at bottom right, rgba(189, 109, 252, 0.05) 0%, transparent 60%);
     position: relative;
     overflow: hidden;
+}
+
+/* Project Tech Stack Tags */
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 5;
+}
+
+.project-tags span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    background-color: rgba(189, 109, 252, 0.1);
+    color: #bd6dfc;
+    border-radius: 50px;
+    border: 1px solid rgba(189, 109, 252, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .portfolio-card-canvas {

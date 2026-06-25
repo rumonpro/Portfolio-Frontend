@@ -1,13 +1,16 @@
 // Portfolio Data Loading
+const IS_LOCAL_ENV = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const BACKEND_BASE_URL = IS_LOCAL_ENV ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
+
 async function loadProjects() {
     const portfolioGrid = document.getElementById('portfolioGrid');
     if (!portfolioGrid) return;
 
     try {
-        const response = await fetch('https://portfolio-backend-h88g.vercel.app/api/projects');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/projects`);
         if (!response.ok) throw new Error('Failed to fetch projects');
 
-        const projects = (await response.json()).slice(0, 6);
+        const projects = (await response.json()).slice(0, 8);
 
         if (projects.length === 0) {
             portfolioGrid.innerHTML = '<div class="portfolio-error">No projects uploaded yet</div>';
@@ -38,8 +41,17 @@ function createPortfolioCard(project) {
     if (project.image) {
         imageUrl = (project.image.startsWith('http') || project.image.startsWith('data:'))
             ? project.image
-            : `https://portfolio-backend-h88g.vercel.app/${project.image}`;
+            : `${BACKEND_BASE_URL}/${project.image}`;
     }
+
+    const maxChars = 160;
+    const truncatedDesc = project.description && project.description.length > maxChars
+        ? project.description.substring(0, maxChars) + '...'
+        : (project.description || '');
+
+    const techTags = Array.isArray(project.techStack)
+        ? project.techStack.map(tag => `<span>${tag}</span>`).join('')
+        : '';
 
     card.innerHTML = `
         <div class="card-image-box">
@@ -48,7 +60,8 @@ function createPortfolioCard(project) {
         <div class="card-content-box">
             <canvas class="portfolio-card-canvas" aria-hidden="true"></canvas>
             <h3>${project.name}</h3>
-            <p>${project.description}</p>
+            <p>${truncatedDesc}</p>
+            ${techTags ? `<div class="project-tags">${techTags}</div>` : ''}
             <div class="project-links">
                 ${project.liveLink ? `<a href="${project.liveLink}" target="_blank" class="project-link"><i class="fas fa-external-link-alt"></i> Live Preview</a>` : ''}
                 ${project.githubLink ? `<a href="${project.githubLink}" target="_blank" class="project-link github-link"><i class="fab fa-github"></i> GitHub</a>` : ''}

@@ -1,10 +1,14 @@
-const API_BASE_URL = "https://portfolio-backend-h88g.vercel.app/api";
+const IS_LOCAL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const BACKEND_URL = IS_LOCAL ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
+const API_BASE_URL = `${BACKEND_URL}/api`;
 const DEFAULT_BLOG_IMAGE = "https://via.placeholder.com/400x200?text=Blog+Image";
 const DEFAULT_PROJECT_IMAGE = "https://via.placeholder.com/400x200?text=Project+Image";
 
 const state = {
     currentPage: "home",
-    currentReplyCommentId: null
+    currentReplyCommentId: null,
+    editingProjectId: null,
+    editingBlogId: null
 };
 
 const dom = {
@@ -17,6 +21,10 @@ const dom = {
     projectForm: document.getElementById("project-form"),
     blogSubmit: document.getElementById("blog-submit"),
     projectSubmit: document.getElementById("project-submit"),
+    blogFormTitle: document.getElementById("blog-form-title"),
+    blogCancelEdit: document.getElementById("blog-cancel-edit"),
+    projectFormTitle: document.getElementById("project-form-title"),
+    projectCancelEdit: document.getElementById("project-cancel-edit"),
     blogList: document.getElementById("blog-list"),
     projectList: document.getElementById("project-list"),
     blogImageFile: document.getElementById("blog-image-file"),
@@ -65,9 +73,9 @@ function resolveImageUrl(rawUrl) {
     if (!rawUrl || typeof rawUrl !== "string") return "";
     const trimmed = rawUrl.trim();
     if (!trimmed) return "";
-    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-    if (trimmed.startsWith("/uploads/")) return `https://portfolio-backend-h88g.vercel.app${trimmed}`;
-    if (trimmed.startsWith("uploads/")) return `https://portfolio-backend-h88g.vercel.app/${trimmed}`;
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("data:")) return trimmed;
+    if (trimmed.startsWith("/uploads/")) return `${BACKEND_URL}${trimmed}`;
+    if (trimmed.startsWith("uploads/")) return `${BACKEND_URL}/${trimmed}`;
     return trimmed;
 }
 
@@ -119,10 +127,13 @@ function renderBlogTable(blogs) {
                 <td>${safeTitle}</td>
                 <td>${formatDate(blog?.createdAt)}</td>
                 <td class="actions-cell">
-                    <a href="${blogUrl}" target="_blank" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                    <a href="${blogUrl}" target="_blank" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-right: 5px;">
                         <i class="fas fa-eye"></i>
                     </a>
-                    <button class="btn btn-danger" data-delete-blog="${safeId}">
+                    <button class="btn btn-primary" data-edit-blog="${safeId}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background-color: #b057d5; border-color: #b057d5; margin-right: 5px;">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger" data-delete-blog="${safeId}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -159,7 +170,10 @@ function renderProjectTable(projects) {
                 <td>${safeName}</td>
                 <td>${links}</td>
                 <td class="actions-cell">
-                    <button class="btn btn-danger" data-delete-project="${safeId}">
+                    <button class="btn btn-primary" data-edit-project="${safeId}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background-color: #b057d5; border-color: #b057d5; margin-right: 5px;">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger" data-delete-project="${safeId}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -316,7 +330,8 @@ async function handleBlogSubmit(event) {
         return;
     }
 
-    setBusy(dom.blogSubmit, "Creating...", "Create Blog", true);
+    const isEdit = !!state.editingBlogId;
+    setBusy(dom.blogSubmit, isEdit ? "Updating..." : "Creating...", isEdit ? "Update Blog" : "Create Blog", true);
 
     try {
         let image = dom.blogImageUrl.value;
@@ -326,26 +341,34 @@ async function handleBlogSubmit(event) {
             dom.blogImageUrl.value = image;
         }
 
-        const response = await fetch(`${API_BASE_URL}/blogs`, {
-            method: "POST",
+        const url = isEdit ? `${API_BASE_URL}/blogs/${state.editingBlogId}` : `${API_BASE_URL}/blogs`;
+        const method = isEdit ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+            method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ title, content, tags, image })
         });
 
         const data = await parseJsonSafe(response);
-        if (!response.ok) throw new Error(data?.message || "Failed to create blog");
+        if (!response.ok) throw new Error(data?.message || (isEdit ? "Failed to update blog" : "Failed to create blog"));
 
-        dom.blogForm.reset();
-        dom.blogImageUrl.value = "";
-        dom.previewBlogImg.src = DEFAULT_BLOG_IMAGE;
-        updateBlogPreview();
+        if (isEdit) {
+            alert("Blog updated successfully.");
+            cancelEditBlog();
+        } else {
+            dom.blogForm.reset();
+            dom.blogImageUrl.value = "";
+            dom.previewBlogImg.src = DEFAULT_BLOG_IMAGE;
+            updateBlogPreview();
+            alert("Blog created successfully.");
+        }
         await fetchBlogs();
         await fetchStats();
-        alert("Blog created successfully.");
     } catch (error) {
-        alert(error.message || "Failed to create blog.");
+        alert(error.message || (isEdit ? "Failed to update blog." : "Failed to create blog."));
     } finally {
-        setBusy(dom.blogSubmit, "Creating...", "Create Blog", false);
+        setBusy(dom.blogSubmit, isEdit ? "Updating..." : "Creating...", isEdit ? "Update Blog" : "Create Blog", false);
     }
 }
 
@@ -364,7 +387,8 @@ async function handleProjectSubmit(event) {
         return;
     }
 
-    setBusy(dom.projectSubmit, "Uploading...", "Upload Project", true);
+    const isEdit = !!state.editingProjectId;
+    setBusy(dom.projectSubmit, isEdit ? "Updating..." : "Uploading...", isEdit ? "Update Project" : "Upload Project", true);
 
     try {
         let image = dom.projectImageUrl.value;
@@ -374,26 +398,34 @@ async function handleProjectSubmit(event) {
             dom.projectImageUrl.value = image;
         }
 
-        const response = await fetch(`${API_BASE_URL}/projects`, {
-            method: "POST",
+        const url = isEdit ? `${API_BASE_URL}/projects/${state.editingProjectId}` : `${API_BASE_URL}/projects`;
+        const method = isEdit ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+            method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, description, techStack, liveLink, githubLink, image })
         });
 
         const data = await parseJsonSafe(response);
-        if (!response.ok) throw new Error(data?.message || "Failed to create project");
+        if (!response.ok) throw new Error(data?.message || (isEdit ? "Failed to update project" : "Failed to create project"));
 
-        dom.projectForm.reset();
-        dom.projectImageUrl.value = "";
-        dom.previewProjectImg.src = DEFAULT_PROJECT_IMAGE;
-        updateProjectPreview();
+        if (isEdit) {
+            alert("Project updated successfully.");
+            cancelEditProject();
+        } else {
+            dom.projectForm.reset();
+            dom.projectImageUrl.value = "";
+            dom.previewProjectImg.src = DEFAULT_PROJECT_IMAGE;
+            updateProjectPreview();
+            alert("Project uploaded successfully.");
+        }
         await fetchProjects();
         await fetchStats();
-        alert("Project uploaded successfully.");
     } catch (error) {
-        alert(error.message || "Failed to upload project.");
+        alert(error.message || (isEdit ? "Failed to update project." : "Failed to upload project."));
     } finally {
-        setBusy(dom.projectSubmit, "Uploading...", "Upload Project", false);
+        setBusy(dom.projectSubmit, isEdit ? "Updating..." : "Uploading...", isEdit ? "Update Project" : "Upload Project", false);
     }
 }
 
@@ -406,9 +438,60 @@ async function deleteBlog(id) {
         if (!response.ok) throw new Error(data?.message || "Failed to delete blog");
         await fetchBlogs();
         await fetchStats();
+        if (state.editingBlogId === id) {
+            cancelEditBlog();
+        }
     } catch (error) {
         alert(error.message || "Failed to delete blog.");
     }
+}
+
+async function startEditBlog(id) {
+    if (!id) return;
+    try {
+        const response = await fetch(`${API_BASE_URL}/blogs/${id}`);
+        const blog = await parseJsonSafe(response);
+        if (!response.ok || !blog) throw new Error("Failed to load blog details");
+
+        state.editingBlogId = id;
+        
+        // Populate form fields
+        document.getElementById("blog-title").value = blog.title || "";
+        document.getElementById("blog-content").value = blog.content || "";
+        document.getElementById("blog-tags").value = Array.isArray(blog.tags) ? blog.tags.join(", ") : "";
+        dom.blogImageUrl.value = blog.image || "";
+        
+        // Update live preview
+        if (blog.image) {
+            dom.previewBlogImg.src = resolveImageUrl(blog.image);
+        } else {
+            dom.previewBlogImg.src = DEFAULT_BLOG_IMAGE;
+        }
+        updateBlogPreview();
+
+        // Update UI state
+        dom.blogFormTitle.innerHTML = `<i class="fas fa-edit"></i> Edit Blog`;
+        dom.blogSubmit.innerText = "Update Blog";
+        dom.blogCancelEdit.style.display = "inline-block";
+
+        // Scroll to form
+        dom.blogForm.scrollIntoView({ behavior: "smooth" });
+
+    } catch (error) {
+        alert(error.message || "Failed to load blog for editing.");
+    }
+}
+
+function cancelEditBlog() {
+    state.editingBlogId = null;
+    dom.blogForm.reset();
+    dom.blogImageUrl.value = "";
+    dom.previewBlogImg.src = DEFAULT_BLOG_IMAGE;
+    updateBlogPreview();
+
+    dom.blogFormTitle.innerHTML = `<i class="fas fa-plus"></i> Create New Blog`;
+    dom.blogSubmit.innerText = "Create Blog";
+    dom.blogCancelEdit.style.display = "none";
 }
 
 async function deleteProject(id) {
@@ -420,9 +503,62 @@ async function deleteProject(id) {
         if (!response.ok) throw new Error(data?.message || "Failed to delete project");
         await fetchProjects();
         await fetchStats();
+        if (state.editingProjectId === id) {
+            cancelEditProject();
+        }
     } catch (error) {
         alert(error.message || "Failed to delete project.");
     }
+}
+
+async function startEditProject(id) {
+    if (!id) return;
+    try {
+        const response = await fetch(`${API_BASE_URL}/projects/${id}`);
+        const project = await parseJsonSafe(response);
+        if (!response.ok || !project) throw new Error("Failed to load project details");
+
+        state.editingProjectId = id;
+        
+        // Populate form fields
+        document.getElementById("project-name").value = project.name || "";
+        document.getElementById("project-description").value = project.description || "";
+        document.getElementById("project-tech").value = Array.isArray(project.techStack) ? project.techStack.join(", ") : "";
+        document.getElementById("project-live").value = project.liveLink || "";
+        document.getElementById("project-github").value = project.githubLink || "";
+        dom.projectImageUrl.value = project.image || "";
+        
+        // Update live preview
+        if (project.image) {
+            dom.previewProjectImg.src = resolveImageUrl(project.image);
+        } else {
+            dom.previewProjectImg.src = DEFAULT_PROJECT_IMAGE;
+        }
+        updateProjectPreview();
+
+        // Update UI state
+        dom.projectFormTitle.innerHTML = `<i class="fas fa-edit"></i> Edit Project`;
+        dom.projectSubmit.innerText = "Update Project";
+        dom.projectCancelEdit.style.display = "inline-block";
+
+        // Scroll to form
+        dom.projectForm.scrollIntoView({ behavior: "smooth" });
+
+    } catch (error) {
+        alert(error.message || "Failed to load project for editing.");
+    }
+}
+
+function cancelEditProject() {
+    state.editingProjectId = null;
+    dom.projectForm.reset();
+    dom.projectImageUrl.value = "";
+    dom.previewProjectImg.src = DEFAULT_PROJECT_IMAGE;
+    updateProjectPreview();
+
+    dom.projectFormTitle.innerHTML = `<i class="fas fa-upload"></i> Upload New Project`;
+    dom.projectSubmit.innerText = "Upload Project";
+    dom.projectCancelEdit.style.display = "none";
 }
 
 async function deleteComment(id) {
@@ -508,14 +644,38 @@ function bindEvents() {
     dom.projectSubmit.addEventListener("click", handleProjectSubmit);
 
     dom.blogList.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-delete-blog]");
-        if (button) deleteBlog(button.dataset.deleteBlog);
+        const deleteButton = event.target.closest("[data-delete-blog]");
+        if (deleteButton) {
+            deleteBlog(deleteButton.dataset.deleteBlog);
+            return;
+        }
+
+        const editButton = event.target.closest("[data-edit-blog]");
+        if (editButton) {
+            startEditBlog(editButton.dataset.editBlog);
+        }
     });
 
+    if (dom.blogCancelEdit) {
+        dom.blogCancelEdit.addEventListener("click", cancelEditBlog);
+    }
+
     dom.projectList.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-delete-project]");
-        if (button) deleteProject(button.dataset.deleteProject);
+        const deleteButton = event.target.closest("[data-delete-project]");
+        if (deleteButton) {
+            deleteProject(deleteButton.dataset.deleteProject);
+            return;
+        }
+
+        const editButton = event.target.closest("[data-edit-project]");
+        if (editButton) {
+            startEditProject(editButton.dataset.editProject);
+        }
     });
+
+    if (dom.projectCancelEdit) {
+        dom.projectCancelEdit.addEventListener("click", cancelEditProject);
+    }
 
     if (dom.commentsList) {
         dom.commentsList.addEventListener("click", (event) => {

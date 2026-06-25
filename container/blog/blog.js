@@ -1,4 +1,7 @@
 // Blog Slider Logic
+const IS_LOCAL_ENV = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const BACKEND_BASE_URL = IS_LOCAL_ENV ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
+
 let currentSlide = 0;
 let totalBlogs = 0;
 let blogsData = [];
@@ -8,7 +11,7 @@ async function loadBlogs() {
 
     try {
         // Fetch blogs from backend API
-        const response = await fetch('https://portfolio-backend-h88g.vercel.app/api/blogs');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
 
         if (!response.ok) {
             throw new Error('Failed to fetch blogs');
@@ -57,7 +60,7 @@ function createBlogCard(blog) {
 
     let imageUrl = './Assets/1.jpg';
     if (blog.image) {
-        imageUrl = (blog.image.startsWith('http') || blog.image.startsWith('data:')) ? blog.image : `https://portfolio-backend-h88g.vercel.app/${blog.image}`;
+        imageUrl = (blog.image.startsWith('http') || blog.image.startsWith('data:')) ? blog.image : `${BACKEND_BASE_URL}/${blog.image}`;
     }
 
     card.innerHTML = `
