@@ -36,7 +36,7 @@ function createPortfolioCard(project) {
 
     let imageUrl = './Assets/1.jpg';
     if (project.image) {
-        imageUrl = project.image.startsWith('http')
+        imageUrl = (project.image.startsWith('http') || project.image.startsWith('data:'))
             ? project.image
             : `https://portfolio-backend-h88g.vercel.app/${project.image}`;
     }

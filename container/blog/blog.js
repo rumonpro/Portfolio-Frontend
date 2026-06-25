@@ -57,7 +57,7 @@ function createBlogCard(blog) {
 
     let imageUrl = './Assets/1.jpg';
     if (blog.image) {
-        imageUrl = blog.image.startsWith('http') ? blog.image : `https://portfolio-backend-h88g.vercel.app/${blog.image}`;
+        imageUrl = (blog.image.startsWith('http') || blog.image.startsWith('data:')) ? blog.image : `https://portfolio-backend-h88g.vercel.app/${blog.image}`;
     }
 
     card.innerHTML = `

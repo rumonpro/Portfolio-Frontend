@@ -172,7 +172,7 @@
         function createPortfolioCard(project) {
             const card = document.createElement('div');
             card.className = 'portfolio-card';
-            let imageUrl = project.image ? (project.image.startsWith('http') ? project.image : `https://portfolio-backend-h88g.vercel.app/${project.image}`) : './Assets/1.jpg';
+            let imageUrl = project.image ? ((project.image.startsWith('http') || project.image.startsWith('data:')) ? project.image : `https://portfolio-backend-h88g.vercel.app/${project.image}`) : './Assets/1.jpg';
 
             card.innerHTML = `
                 <div class="card-image-box">
