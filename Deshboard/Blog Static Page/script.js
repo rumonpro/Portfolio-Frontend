@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://portfolio-backend-two-henna.vercel.app/api";
+const API_BASE_URL = "https://portfolio-backend-h88g.vercel.app/api";
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000";
 
 function resolveImageUrl(rawUrl) {
@@ -6,8 +6,8 @@ function resolveImageUrl(rawUrl) {
     const trimmed = rawUrl.trim();
     if (!trimmed) return DEFAULT_IMAGE;
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-    if (trimmed.startsWith("/uploads/")) return `https://portfolio-backend-two-henna.vercel.app${trimmed}`;
-    if (trimmed.startsWith("uploads/")) return `https://portfolio-backend-two-henna.vercel.app/${trimmed}`;
+    if (trimmed.startsWith("/uploads/")) return `https://portfolio-backend-h88g.vercel.app${trimmed}`;
+    if (trimmed.startsWith("uploads/")) return `https://portfolio-backend-h88g.vercel.app/${trimmed}`;
     return trimmed;
 }
 

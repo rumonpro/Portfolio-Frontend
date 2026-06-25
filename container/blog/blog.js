@@ -5,26 +5,26 @@ let blogsData = [];
 
 async function loadBlogs() {
     const blogGrid = document.getElementById('blogGrid');
-    
+
     try {
         // Fetch blogs from backend API
-        const response = await fetch('https://portfolio-backend-two-henna.vercel.app/api/blogs');
-        
+        const response = await fetch('https://portfolio-backend-h88g.vercel.app/api/blogs');
+
         if (!response.ok) {
             throw new Error('Failed to fetch blogs');
         }
-        
+
         blogsData = await response.json();
         totalBlogs = blogsData.length;
-        
+
         if (totalBlogs === 0) {
             blogGrid.innerHTML = '<div class="blog-error">No blogs published yet</div>';
             return;
         }
-        
+
         // Clear loading message
         blogGrid.innerHTML = '';
-        
+
         // Create and append blog cards
         blogsData.forEach((blog) => {
             const blogCard = createBlogCard(blog);
@@ -33,7 +33,7 @@ async function loadBlogs() {
 
         // Initialize Slider
         initSlider();
-        
+
     } catch (error) {
         console.error('Error loading blogs:', error);
         blogGrid.innerHTML = `<div class="blog-error">Error loading blogs. Please try again later.</div>`;
@@ -43,23 +43,23 @@ async function loadBlogs() {
 function createBlogCard(blog) {
     const card = document.createElement('div');
     card.className = 'blog-card';
-    
+
     const date = new Date(blog.createdAt);
-    const formattedDate = date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+    const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
     });
-    
-    const preview = blog.content.length > 150 
-        ? blog.content.substring(0, 150) + '...' 
+
+    const preview = blog.content.length > 150
+        ? blog.content.substring(0, 150) + '...'
         : blog.content;
-    
+
     let imageUrl = './Assets/1.jpg';
     if (blog.image) {
-        imageUrl = blog.image.startsWith('http') ? blog.image : `https://portfolio-backend-two-henna.vercel.app/${blog.image}`;
+        imageUrl = blog.image.startsWith('http') ? blog.image : `https://portfolio-backend-h88g.vercel.app/${blog.image}`;
     }
-    
+
     card.innerHTML = `
         <div class="blog-card-image">
             <img src="${imageUrl}" alt="${blog.title}" onerror="this.src='./Assets/1.jpg'">
@@ -71,13 +71,13 @@ function createBlogCard(blog) {
             <a href="#" class="blog-read-more" data-blog-id="${blog._id}">Read More →</a>
         </div>
     `;
-    
+
     const readMoreBtn = card.querySelector('.blog-read-more');
     readMoreBtn.addEventListener('click', (e) => {
         e.preventDefault();
         navigateToBlogDetail(blog._id);
     });
-    
+
     return card;
 }
 
@@ -97,14 +97,14 @@ function initSlider() {
     // If we show 4 cards, and have 8 blogs, we can slide 4 times if we slide 1 by 1.
     // Or 2 times if we slide 4 by 4.
     // Let's slide 1 by 1 for better UX.
-    
+
     const updateSlider = () => {
         const cardWidth = blogGrid.querySelector('.blog-card').offsetWidth;
         const gap = 30; // matches CSS gap
         const moveDistance = cardWidth + gap;
-        
+
         blogGrid.style.transform = `translateX(-${currentSlide * moveDistance}px)`;
-        
+
         // Update dots
         const dots = blogDots.querySelectorAll('.blog-dot');
         dots.forEach((dot, index) => {
@@ -115,7 +115,7 @@ function initSlider() {
         const cardsVisible = getVisibleCards();
         prevBtn.disabled = currentSlide === 0;
         nextBtn.disabled = currentSlide >= totalBlogs - cardsVisible;
-        
+
         prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
         nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
     };
@@ -130,7 +130,7 @@ function initSlider() {
     blogDots.innerHTML = '';
     const cardsVisible = getVisibleCards();
     const dotsCount = Math.max(0, totalBlogs - cardsVisible + 1);
-    
+
     for (let i = 0; i < dotsCount; i++) {
         const dot = document.createElement('div');
         dot.className = 'blog-dot';
@@ -162,11 +162,11 @@ function initSlider() {
         // Recalculate dots on resize
         const newCardsVisible = getVisibleCards();
         const newDotsCount = Math.max(0, totalBlogs - newCardsVisible + 1);
-        
+
         if (currentSlide >= newDotsCount) {
             currentSlide = Math.max(0, newDotsCount - 1);
         }
-        
+
         // Re-render dots
         blogDots.innerHTML = '';
         for (let i = 0; i < newDotsCount; i++) {
@@ -179,7 +179,7 @@ function initSlider() {
             });
             blogDots.appendChild(dot);
         }
-        
+
         updateSlider();
     });
 

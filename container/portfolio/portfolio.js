@@ -4,18 +4,18 @@ async function loadProjects() {
     if (!portfolioGrid) return;
 
     try {
-        const response = await fetch('https://portfolio-backend-two-henna.vercel.app/api/projects');
+        const response = await fetch('https://portfolio-backend-h88g.vercel.app/api/projects');
         if (!response.ok) throw new Error('Failed to fetch projects');
-        
+
         const projects = (await response.json()).slice(0, 6);
-        
+
         if (projects.length === 0) {
             portfolioGrid.innerHTML = '<div class="portfolio-error">No projects uploaded yet</div>';
             return;
         }
 
         portfolioGrid.innerHTML = '';
-        
+
         projects.forEach(project => {
             const card = createPortfolioCard(project);
             portfolioGrid.appendChild(card);
@@ -33,12 +33,12 @@ async function loadProjects() {
 function createPortfolioCard(project) {
     const card = document.createElement('div');
     card.className = 'portfolio-card';
-    
+
     let imageUrl = './Assets/1.jpg';
     if (project.image) {
-        imageUrl = project.image.startsWith('http') 
-            ? project.image 
-            : `https://portfolio-backend-two-henna.vercel.app/${project.image}`;
+        imageUrl = project.image.startsWith('http')
+            ? project.image
+            : `https://portfolio-backend-h88g.vercel.app/${project.image}`;
     }
 
     card.innerHTML = `

@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://portfolio-backend-two-henna.vercel.app/api";
+const API_BASE_URL = "https://portfolio-backend-h88g.vercel.app/api";
 const DEFAULT_BLOG_IMAGE = "https://via.placeholder.com/400x200?text=Blog+Image";
 const DEFAULT_PROJECT_IMAGE = "https://via.placeholder.com/400x200?text=Project+Image";
 
@@ -66,8 +66,8 @@ function resolveImageUrl(rawUrl) {
     const trimmed = rawUrl.trim();
     if (!trimmed) return "";
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-    if (trimmed.startsWith("/uploads/")) return `https://portfolio-backend-two-henna.vercel.app${trimmed}`;
-    if (trimmed.startsWith("uploads/")) return `https://portfolio-backend-two-henna.vercel.app/${trimmed}`;
+    if (trimmed.startsWith("/uploads/")) return `https://portfolio-backend-h88g.vercel.app${trimmed}`;
+    if (trimmed.startsWith("uploads/")) return `https://portfolio-backend-h88g.vercel.app/${trimmed}`;
     return trimmed;
 }
 
@@ -212,7 +212,7 @@ function renderCommentTable(comments) {
             const safeBlogTitle = comment?.blogId?.title || "Unknown Blog";
             const safeId = comment?._id || "";
             const dateStr = formatDate(comment?.createdAt);
-            
+
             return `
             <tr>
                 <td>
@@ -455,7 +455,7 @@ function closeReplyModal() {
 async function submitReply() {
     const id = state.currentReplyCommentId;
     if (!id) return;
-    
+
     const reply = dom.replyText.value.trim();
     setBusy(dom.submitReplyBtn, "Sending...", "Send Reply", true);
 
@@ -465,10 +465,10 @@ async function submitReply() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ reply })
         });
-        
+
         const data = await parseJsonSafe(response);
         if (!response.ok) throw new Error(data?.message || "Failed to post reply");
-        
+
         closeReplyModal();
         await fetchComments();
     } catch (error) {
@@ -524,7 +524,7 @@ function bindEvents() {
                 deleteComment(deleteBtn.dataset.deleteComment);
                 return;
             }
-            
+
             const replyBtn = event.target.closest("[data-reply-comment]");
             if (replyBtn) {
                 const { replyComment, msg, reply } = replyBtn.dataset;
@@ -536,11 +536,11 @@ function bindEvents() {
     if (dom.refreshCommentsBtn) {
         dom.refreshCommentsBtn.addEventListener("click", fetchComments);
     }
-    
+
     if (dom.cancelReplyBtn) {
         dom.cancelReplyBtn.addEventListener("click", closeReplyModal);
     }
-    
+
     if (dom.submitReplyBtn) {
         dom.submitReplyBtn.addEventListener("click", submitReply);
     }
@@ -556,7 +556,7 @@ function bindEvents() {
 
 function init() {
     bindEvents();
-    
+
     // Set Admin Name
     const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
     if (user.username && dom.adminName) {
