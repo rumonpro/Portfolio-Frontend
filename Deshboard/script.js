@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://backend-twze.vercel.app/api";
+const API_BASE_URL = "https://portfolio-backend-two-henna.vercel.app/api";
 const DEFAULT_BLOG_IMAGE = "https://via.placeholder.com/400x200?text=Blog+Image";
 const DEFAULT_PROJECT_IMAGE = "https://via.placeholder.com/400x200?text=Project+Image";
 
@@ -66,8 +66,8 @@ function resolveImageUrl(rawUrl) {
     const trimmed = rawUrl.trim();
     if (!trimmed) return "";
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-    if (trimmed.startsWith("/uploads/")) return `https://backend-twze.vercel.app${trimmed}`;
-    if (trimmed.startsWith("uploads/")) return `https://backend-twze.vercel.app/${trimmed}`;
+    if (trimmed.startsWith("/uploads/")) return `https://portfolio-backend-two-henna.vercel.app${trimmed}`;
+    if (trimmed.startsWith("uploads/")) return `https://portfolio-backend-two-henna.vercel.app/${trimmed}`;
     return trimmed;
 }
 

@@ -1,7 +1,7 @@
 (function () {
     const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
         ? 'http://localhost:5000/api'
-        : 'https://backend-twze.vercel.app/api';
+        : 'https://portfolio-backend-two-henna.vercel.app/api';
 
     const initNewsletter = () => {
         const subscribeForm = document.querySelector('.footer-subscribe');
