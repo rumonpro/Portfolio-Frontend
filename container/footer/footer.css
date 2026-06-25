@@ -218,4 +218,5 @@
     .v-divider, .v-divider-small { display: none; }
     .footer-newsletter { flex-direction: column; align-items: flex-start; gap: 20px; }
     .footer-subscribe { width: 100%; }
+    .footer-info-row { flex-direction: column; gap: 25px; align-items: flex-start; }
 }
