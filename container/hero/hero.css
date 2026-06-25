@@ -281,31 +281,40 @@
 
 @media (max-width: 480px) {
     .hero-section {
-        padding: 6rem 5% 3rem 5%;
+        padding: 6rem 15px 3rem 15px;
         min-height: auto;
     }
-
+ 
     .hero-container {
         flex-direction: column;
         text-align: center;
         gap: 2.5rem;
         padding-top: 1rem;
     }
-
+ 
     .hero-content {
         display: flex;
         flex-direction: column;
         align-items: center;
         max-width: 100%;
     }
-
+ 
     .badge {
         margin-top: 1.2rem;
         margin-bottom: 1.5rem;
     }
-
+ 
     .hero-title {
-        font-size: 2.2rem;
+        font-size: 2rem;
+        line-height: 1.3;
+    }
+
+    .hero-title br {
+        display: none;
+    }
+
+    .hero-title .highlight {
+        white-space: nowrap;
     }
 
     .hero-visual {
