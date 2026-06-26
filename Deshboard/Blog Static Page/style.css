@@ -431,7 +431,7 @@ blockquote cite {
 
 .tags-cloud a {
     background: var(--bg-dark);
-    color: var(--text-muted);
+    color: var(--text-white);
     text-decoration: none;
     padding: 5px 15px;
     border-radius: 5px;
