@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Details | Rumon</title>
+    <link rel="icon" type="image/png" href="../../Assets/fav icon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../../container/header/header.css">
+    <link rel="stylesheet" href="../../container/footer/footer.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0b0c16;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        
+        
+        
+    </style>
+</head>
+
+<body>
+    <!-- Page Header -->
+    <div id="header-container"></div>
+    <section class="page-header">
+        <div class="container">
+            <h1 id="blog-main-title">Blog Details</h1>
+            <div class="breadcrumbs">
+                <a href="../../Index.html">Home</a>
+                <span>/</span>
+                <span id="breadcrumb-current">Blog Details</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <div class="main-layout container">
+        <div class="content-area">
+            <div class="featured-image">
+                <img id="blog-featured-img"
+                    src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000"
+                    alt="Blog Image">
+            </div>
+
+            <div class="post-meta">
+                <span><i class="far fa-user"></i> ADMIN</span>
+                <span><i class="far fa-calendar"></i> <span id="blog-date">SEPTEMBER 11, 2024</span></span>
+                <span class="category-tag" id="blog-category"><i class="fas fa-folder"></i> CYBER SECURITY</span>
+            </div>
+
+            <article class="blog-article">
+                <div id="blog-content-body">
+                    <p>Loading blog content...</p>
+                </div>
+            </article>
+
+            <!-- Comments Section -->
+            <section class="comment-section">
+                <h3>Leave a Reply</h3>
+                <p>Your email address will not be published. Required fields are marked *</p>
+                <form class="comment-form">
+                    <textarea placeholder="Comment *" required></textarea>
+                    <div class="form-grid">
+                        <input type="text" placeholder="Name *" required>
+                        <input type="email" placeholder="Email *" required>
+                    </div>
+                    <input type="text" placeholder="Website">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="save-info">
+                        <label for="save-info">Save my name, email, and website in this browser for the next time I
+                            comment.</label>
+                    </div>
+                    <button type="submit" class="submit-btn">POST COMMENT</button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="widget search-widget">
+                <h3>Search</h3>
+                <div class="search-box">
+                    <input type="text" placeholder="Search for...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="widget recent-posts">
+                <h3>Recent Post</h3>
+                <div class="post-list" id="recent-posts-list">
+                    <!-- Dynamic Recent Posts -->
+                </div>
+            </div>
+
+            <div class="widget categories-widget">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Cloud Security</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Cyber Safety</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Future Security</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Online Privacy</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Security Trends</a></li>
+                </ul>
+            </div>
+
+            <div class="widget tags-widget">
+                <h3>Popular Tags</h3>
+                <div class="tags-cloud" id="blog-tags-cloud">
+                    <a href="#">security</a>
+                </div>
+            </div>
+
+            <div class="ad-widget">
+                <div class="ad-content">
+                    <div class="ad/enquiry-icon"><i class="fas fa-shield-heart"></i></div>
+                    <h4>Securing the Future Today</h4>
+                    <p>Hackers Don't Need Keys, Just Carelessness.</p>
+                    <button class="ad-btn"><i class="far fa-eye"></i> CONTACT US</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script src="script.js"></script>
+    <script>
+        async function loadComponents() {
+            const components = [
+                { id: 'header-container', url: '../../container/header/header.html', script: '../../container/header/header.js' },
+                { id: 'footer-container', url: '../../container/footer/footer.html', script: '../../container/footer/footer.js' }
+            ];
+
+            for (const comp of components) {
+                try {
+                    const response = await fetch(comp.url);
+                    if (response.ok) {
+                        const html = await response.text();
+                        document.getElementById(comp.id).innerHTML = html;
+
+                        // Load component script if exists
+                        if (comp.script) {
+                            const script = document.createElement('script');
+                            script.src = comp.script;
+                            document.body.appendChild(script);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error loading component ${comp.id}:`, error);
+                }
+            }
+        }
+
+        loadComponents();
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            if (!cursorDot || !cursorOutline) return;
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.style.left = `${posX}px`;
+            cursorOutline.style.top = `${posY}px`;
+        });
+    </script>
+</body>
+
+</html>
