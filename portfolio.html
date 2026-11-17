@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Projects | Portfolio | Rumon</title>
+    <link rel="icon" type="image/png" href="Assets/fav icon.png">
+
+    <!-- External Resources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Montserrat:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Component CSS -->
+    <link rel="stylesheet" href="container/header/header.css">
+    <link rel="stylesheet" href="container/footer/footer.css">
+    <link rel="stylesheet" href="container/portfolio/portfolio.css">
+
+    <style>
+        :root {
+            --fs-section-title: clamp(2rem, 1.6vw + 1.6rem, 2.75rem);
+            --fs-section-subtitle: clamp(1rem, 0.35vw + 0.92rem, 1.125rem);
+            --fs-card-title: clamp(1.15rem, 0.4vw + 1.05rem, 1.35rem);
+            --fs-body-sm: clamp(0.9rem, 0.2vw + 0.85rem, 1rem);
+            --primary: #b057d5;
+            --primary-glow: rgba(176, 87, 213, 0.35);
+            --secondary: #ff8453;
+            --bg-dark: #0b0c16;
+            --card-bg: #171825;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .page-header {
+            background: linear-gradient(rgba(11, 12, 22, 0.85), rgba(11, 12, 22, 0.95)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1600');
+            background-size: cover;
+            background-position: center;
+            padding: 130px 20px 70px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .page-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: var(--fs-section-title);
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 30%, #b057d5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            color: #a4a5b6;
+            font-size: 14px;
+        }
+
+        .breadcrumbs a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumbs a:hover {
+            color: var(--secondary);
+        }
+
+        /* Controls Section (Filters & Search) */
+        .portfolio-controls {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a4a5b6;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(176, 87, 213, 0.15);
+            border-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #b057d5, #ff8453);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 260px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 18px 10px 42px;
+            border-radius: 50px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a4a5b6;
+            font-size: 14px;
+        }
+
+        .portfolio-main {
+            padding: 40px 0 100px;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            .portfolio-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        /* Card details clickable enhancement */
+        .portfolio-card {
+            cursor: pointer;
+        }
+
+        .card-view-btn {
+            background: rgba(176, 87, 213, 0.15);
+            border: 1px solid rgba(176, 87, 213, 0.4);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .card-view-btn:hover {
+            background: var(--primary);
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+
+        /* Modal Styles */
+        .project-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .project-modal-backdrop.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .project-modal-content {
+            background: #171825;
+            border: 1px solid rgba(176, 87, 213, 0.3);
+            border-radius: 20px;
+            max-width: 750px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .project-modal-backdrop.is-open .project-modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            background: #ff4757;
+            transform: rotate(90deg);
+        }
+
+        .modal-image-wrapper {
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .modal-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-category-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(176, 87, 213, 0.2), rgba(255, 132, 83, 0.2));
+            color: #ff8453;
+            border: 1px solid rgba(255, 132, 83, 0.3);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .modal-desc {
+            color: #c5c6d0;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            white-space: pre-line;
+        }
+
+        .modal-tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .modal-tech-stack span {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b057d5;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+        }
+
+        .modal-action-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-live {
+            background: linear-gradient(135deg, #b057d5, #ff8453);
+            color: #ffffff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .btn-live:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-github {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .btn-github:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateY(-2px);
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            z-index: 99999;
+            pointer-events: none;
+            will-change: transform;
+            transform: translate3d(-50%, -50%, 0);
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #b057d5;
+        }
+
+        .cursor-outline {
+            width: 38px;
+            height: 38px;
+            border: 2px solid rgba(176, 87, 213, 0.5);
+        }
+
+        @media (pointer: coarse) {
+            .cursor-dot,
+            .cursor-outline {
+                display: none !important;
+            }
+            body, a, button {
+                cursor: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div id="header-container"></div>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>All Projects</h1>
+            <div class="breadcrumbs">
+                <a href="Index.html">Home</a>
+                <span>/</span>
+                <span>Portfolio</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter & Search Controls -->
+    <div class="portfolio-controls">
+        <div class="category-filters" id="categoryFilters">
+            <button class="filter-btn active" data-category="all">All Projects</button>
+            <button class="filter-btn" data-category="Cyber Security">Cyber Security</button>
+            <button class="filter-btn" data-category="Web Development">Web Development</button>
+            <button class="filter-btn" data-category="Full Stack">Full Stack</button>
+            <button class="filter-btn" data-category="CMS & E-Commerce">CMS & E-Commerce</button>
+        </div>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="projectSearchInput" placeholder="Search projects by name, tech...">
+        </div>
+    </div>
+
+    <main class="portfolio-main">
+        <div class="portfolio-grid" id="portfolioGrid">
+            <div class="portfolio-loading">Loading projects...</div>
+        </div>
+    </main>
+
+    <!-- Interactive Project Detail Modal -->
+    <div class="project-modal-backdrop" id="projectModal" aria-hidden="true">
+        <div class="project-modal-content" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-image-wrapper">
+                <img id="modalImg" src="./Assets/1.jpg" alt="Project Preview">
+            </div>
+            <div class="modal-body">
+                <span class="modal-category-badge" id="modalCategory">General</span>
+                <h2 class="modal-title" id="modalTitle">Project Title</h2>
+                <div class="modal-tech-stack" id="modalTechStack"></div>
+                <p class="modal-desc" id="modalDesc">Project description goes here...</p>
+                <div class="modal-actions" id="modalActions">
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="modal-action-btn btn-live" id="modalLiveBtn">
+                        <i class="fas fa-external-link-alt"></i> Live Preview
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="modal-action-btn btn-github" id="modalGithubBtn">
+                        <i class="fab fa-github"></i> GitHub Source
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script>
+        const IS_LOCAL_ENV = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const BACKEND_BASE_URL = IS_LOCAL_ENV ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
+
+        const DEFAULT_PROJECTS = [
+            {
+                _id: "proj_101",
+                name: "CyberGuard - Enterprise Vulnerability Scanner",
+                description: "An automated web security auditing and penetration testing platform designed to scan web applications for OWASP Top 10 vulnerabilities, SSL misconfigurations, header leaks, and open ports.",
+                techStack: ["Python", "OWASP ZAP", "Bash", "Docker", "Security"],
+                liveLink: "https://github.com/rumonpro",
+                githubLink: "https://github.com/rumonpro",
+                image: "Assets/1.jpg",
+                category: "Cyber Security"
+            },
+            {
+                _id: "proj_102",
+                name: "Qnifly Digital - Corporate Agency Platform",
+                description: "Full-scale modern corporate website for a high-impact digital solutions agency, featuring custom dynamic service modules, responsive interactive UI, and 98+ PageSpeed optimization.",
+                techStack: ["WordPress", "Elementor Pro", "PHP", "JavaScript", "CSS3"],
+                liveLink: "https://github.com/rumonpro",
+                githubLink: "https://github.com/rumonpro",
+                image: "Assets/2.jpg",
+                category: "Web Development"
+            },
+            {
+                _id: "proj_103",
+                name: "SecureVault - Zero-Knowledge Cloud Storage",
+                description: "End-to-end encrypted personal cloud storage application featuring client-side AES-256-GCM encryption, granular file sharing permissions, and cryptographic integrity verification.",
+                techStack: ["React", "Node.js", "Express", "MongoDB", "AES-256"],
+                liveLink: "https://github.com/rumonpro",
+                githubLink: "https://github.com/rumonpro",
+                image: "Assets/3.jpg",
+                category: "Full Stack"
+            },
+            {
+                _id: "proj_104",
+                name: "Luxora Store - High-Performance eCommerce",
+                description: "Ultra-fast online shopping experience featuring custom product customizers, Stripe multi-currency checkout, automated cart recovery, and lightning 1.1s load time.",
+                techStack: ["WooCommerce", "WordPress", "Stripe API", "Tailwind CSS"],
+                liveLink: "https://github.com/rumonpro",
+                githubLink: "https://github.com/rumonpro",
+                image: "Assets/4.jpg",
+                category: "CMS & E-Commerce"
+            },
+            {
+                _id: "proj_105",
+                name: "Sentinel Shield - Real-Time Web Application Firewall",
+                description: "High-throughput reverse proxy inspection engine that detects SQL Injection, Cross-Site Scripting (XSS), and Layer 7 DDoS threats with sub-millisecond overhead and real-time blocking.",
+                techStack: ["Node.js", "Express", "Redis", "Cloudflare API", "Security"],
+                liveLink: "https://github.com/rumonpro",
+                githubLink: "https://github.com/rumonpro",
+                image: "Assets/5.jpg",
+                category: "Cyber Security"
+            },
+            {
+                _id: "proj_106",
+                name: "DevFolio Pro - Interactive Portfolio & CMS",
+                description: "State-of-the-art dark theme developer portfolio powered by GPU-accelerated canvas particles, dynamic REST API CMS, JWT authentication, and interactive visitor analytics.",
+                techStack: ["HTML5", "CSS3", "JavaScript", "Node.js", "Express"],
+                liveLink: "https://portfolio-frontend-one-theta-46.vercel.app/Index.html",
+                githubLink: "https://github.com/rumonpro/Portfolio-Frontend",
+                image: "Assets/6.jpg",
+                category: "Full Stack"
+            },
+            {
+                _id: "proj_107",
+                name: "Apex Fitness - Subscription & Booking Portal",
+                description: "Modern fitness club management web app featuring automated class scheduling, membership recurring billing via Stripe, SMS alerts, and personalized trainer dashboard.",
+                techStack: ["React", "Node.js", "MongoDB", "Stripe", "Tailwind"],
+                liveLink: "https://github.com/rumonpro",
+                githubLink: "https://github.com/rumonpro",
+                image: "Assets/7.jpg",
+                category: "Web Development"
+            },
+            {
+                _id: "proj_108",
+                name: "PassKey Auth - Biometric & FIDO2 Identity Provider",
+                description: "Passwordless authentication service implementing WebAuthn Passkeys, TOTP two-factor authentication, device fingerprinting, and automatic brute-force IP rate limiting.",
+                techStack: ["TypeScript", "Express", "WebAuthn", "JWT", "MongoDB"],
+                liveLink: "https://github.com/rumonpro",
+                githubLink: "https://github.com/rumonpro",
+                image: "Assets/8.jpg",
+                category: "Cyber Security"
+            }
+        ];
+
+        let allProjects = [];
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        async function fetchProjectsWithFallback() {
+            const urls = [];
+            if (IS_LOCAL_ENV) {
+                urls.push('http://localhost:5000/api/projects');
+            }
+            urls.push('https://portfolio-backend-h88g.vercel.app/api/projects');
+
+            for (const url of urls) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 3500);
+                    const res = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (Array.isArray(data) && data.length > 0) {
+                            return data;
+                        }
+                    }
+                } catch (e) {
+                    console.warn(`Failed fetching from ${url}:`, e.message);
+                }
+            }
+            return DEFAULT_PROJECTS;
+        }
+
+        function resolveProjectImageUrl(rawUrl) {
+            if (!rawUrl || typeof rawUrl !== 'string') return './Assets/1.jpg';
+            const trimmed = rawUrl.trim();
+            if (!trimmed) return './Assets/1.jpg';
+            if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
+                return trimmed;
+            }
+            if (trimmed.startsWith('Assets/') || trimmed.startsWith('./Assets/')) {
+                return trimmed;
+            }
+            if (trimmed.startsWith('/uploads/')) return `${BACKEND_BASE_URL}${trimmed}`;
+            if (trimmed.startsWith('uploads/')) return `${BACKEND_BASE_URL}/${trimmed}`;
+            return trimmed;
+        }
+
+        async function loadProjects() {
+            const portfolioGrid = document.getElementById('portfolioGrid');
+            try {
+                allProjects = await fetchProjectsWithFallback();
+                renderFilteredProjects();
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                allProjects = DEFAULT_PROJECTS;
+                renderFilteredProjects();
+            }
+        }
+
+        function renderFilteredProjects() {
+            const portfolioGrid = document.getElementById('portfolioGrid');
+            const q = searchQuery.toLowerCase().trim();
+
+            const filtered = allProjects.filter(project => {
+                const categoryMatch = (currentCategory === 'all') ||
+                    (project.category && project.category.toLowerCase().includes(currentCategory.toLowerCase()));
+
+                const nameMatch = project.name && project.name.toLowerCase().includes(q);
+                const descMatch = project.description && project.description.toLowerCase().includes(q);
+                const techMatch = Array.isArray(project.techStack) && project.techStack.some(t => t.toLowerCase().includes(q));
+
+                const searchMatch = !q || nameMatch || descMatch || techMatch;
+                return categoryMatch && searchMatch;
+            });
+
+            if (filtered.length === 0) {
+                portfolioGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #a4a5b6;">
+                        <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom: 15px; color: #b057d5;"></i>
+                        <h3>No projects found</h3>
+                        <p style="font-size: 0.95rem; margin-top: 8px;">Try adjusting your category filter or search query.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            portfolioGrid.innerHTML = '';
+            filtered.forEach(project => {
+                const card = createPortfolioCard(project);
+                portfolioGrid.appendChild(card);
+            });
+
+            initParticles();
+        }
+
+        function createPortfolioCard(project) {
+            const card = document.createElement('div');
+            card.className = 'portfolio-card';
+            const imageUrl = resolveProjectImageUrl(project.image);
+            const maxChars = 250;
+            const truncatedDesc = project.description && project.description.length > maxChars
+                ? project.description.substring(0, maxChars) + '...'
+                : (project.description || '');
+
+            const techTags = Array.isArray(project.techStack)
+                ? project.techStack.slice(0, 4).map(tag => `<span>${tag}</span>`).join('')
+                : '';
+
+            card.innerHTML = `
+                <div class="card-image-box">
+                    <img src="${imageUrl}" alt="${project.name}" onerror="this.src='./Assets/1.jpg'">
+                </div>
+                <div class="card-content-box">
+                    <canvas class="portfolio-card-canvas" aria-hidden="true"></canvas>
+                    <span class="card-category-tag">${project.category || 'General'}</span>
+                    <h3>${project.name}</h3>
+                    <p>${truncatedDesc}</p>
+                    ${techTags ? `<div class="project-tags">${techTags}</div>` : ''}
+                    <div class="project-links" style="display: flex; gap: 10px; align-items: center; margin-top: auto;">
+                        <button type="button" class="card-view-btn" data-project-id="${project._id}">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                        ${project.liveLink ? `<a href="${project.liveLink}" target="_blank" rel="noopener noreferrer" class="project-link" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i> Live</a>` : ''}
+                        ${project.githubLink ? `<a href="${project.githubLink}" target="_blank" rel="noopener noreferrer" class="project-link github-link" onclick="event.stopPropagation()"><i class="fab fa-github"></i> Code</a>` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Single click anywhere on card opens modal immediately
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('a')) return;
+                openProjectModal(project);
+            });
+                openProjectModal(project);
+            });
+
+            return card;
+        }
+
+        function openProjectModal(project) {
+            const modal = document.getElementById('projectModal');
+            document.getElementById('modalImg').src = resolveProjectImageUrl(project.image);
+            document.getElementById('modalCategory').innerText = project.category || 'General';
+            document.getElementById('modalTitle').innerText = project.name || 'Untitled';
+            document.getElementById('modalDesc').innerText = project.description || 'No description available.';
+
+            const techContainer = document.getElementById('modalTechStack');
+            if (Array.isArray(project.techStack) && project.techStack.length > 0) {
+                techContainer.innerHTML = project.techStack.map(t => `<span>${t}</span>`).join('');
+                techContainer.style.display = 'flex';
+            } else {
+                techContainer.style.display = 'none';
+            }
+
+            const liveBtn = document.getElementById('modalLiveBtn');
+            if (project.liveLink && project.liveLink !== '#') {
+                liveBtn.href = project.liveLink;
+                liveBtn.style.display = 'inline-flex';
+            } else {
+                liveBtn.style.display = 'none';
+            }
+
+            const githubBtn = document.getElementById('modalGithubBtn');
+            if (project.githubLink && project.githubLink !== '#') {
+                githubBtn.href = project.githubLink;
+                githubBtn.style.display = 'inline-flex';
+            } else {
+                githubBtn.style.display = 'none';
+            }
+
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProjectModal() {
+            const modal = document.getElementById('projectModal');
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Particle Canvas Logic
+        function initParticles() {
+            const canvases = Array.from(document.querySelectorAll('.portfolio-card-canvas'));
+            const colors = ['#b057d5', '#d45b98', '#ff8453'];
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+            canvases.forEach(canvas => {
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+                const parent = canvas.parentElement;
+                let particles = [];
+                let width = 0;
+                let height = 0;
+
+                function resize() {
+                    const rect = parent.getBoundingClientRect();
+                    width = Math.max(1, Math.floor(rect.width));
+                    height = Math.max(1, Math.floor(rect.height));
+                    canvas.width = width * dpr;
+                    canvas.height = height * dpr;
+                    canvas.style.width = `${width}px`;
+                    canvas.style.height = `${height}px`;
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                }
+
+                class Particle {
+                    constructor() { this.reset(true); }
+                    reset(isInit) {
+                        this.x = Math.random() * width;
+                        this.y = isInit ? Math.random() * height : height + 10;
+                        this.vy = -(Math.random() * 0.3 + 0.1);
+                        this.size = Math.random() * 2 + 0.5;
+                        this.color = colors[Math.floor(Math.random() * colors.length)];
+                    }
+                    update() {
+                        this.y += this.vy;
+                        if (this.y < -10) this.reset(false);
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fillStyle = this.color;
+                        ctx.fill();
+                    }
+                }
+
+                resize();
+                for (let i = 0; i < 10; i++) particles.push(new Particle());
+
+                function animate() {
+                    ctx.clearRect(0, 0, width, height);
+                    particles.forEach(p => { p.update(); p.draw(); });
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            });
+        }
+
+        async function loadComponents() {
+            const components = [
+                { id: 'header-container', url: 'container/header/header.html', script: 'container/header/header.js' },
+                { id: 'footer-container', url: 'container/footer/footer.html', script: 'container/footer/footer.js' }
+            ];
+            for (const comp of components) {
+                try {
+                    const response = await fetch(comp.url);
+                    if (response.ok) {
+                        const html = await response.text();
+                        const el = document.getElementById(comp.id);
+                        if (el) el.innerHTML = html;
+                        if (comp.script) {
+                            const script = document.createElement('script');
+                            script.src = comp.script;
+                            document.body.appendChild(script);
+                        }
+                    }
+                } catch (e) {
+                    console.warn(`Error loading ${comp.id}:`, e);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponents();
+            loadProjects();
+
+            // Filter buttons
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.getAttribute('data-category') || 'all';
+                    renderFilteredProjects();
+                });
+            });
+
+            // Search input
+            const searchInput = document.getElementById('projectSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value;
+                    renderFilteredProjects();
+                });
+            }
+
+            // Modal close listeners
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const projectModal = document.getElementById('projectModal');
+
+            if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeProjectModal);
+            if (projectModal) {
+                projectModal.addEventListener('click', (e) => {
+                    if (e.target === projectModal) closeProjectModal();
+                });
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && projectModal.classList.contains('is-open')) {
+                    closeProjectModal();
+                }
+            });
+        });
+
+        // High-performance GPU cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        let mouseX = -100, mouseY = -100;
+        let outlineX = -100, outlineY = -100;
+
+        window.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+        }, { passive: true });
+
+        function animateCursor() {
+            outlineX += (mouseX - outlineX) * 0.2;
+            outlineY += (mouseY - outlineY) * 0.2;
+            cursorOutline.style.transform = `translate3d(${outlineX - 19}px, ${outlineY - 19}px, 0)`;
+            requestAnimationFrame(animateCursor);
+        }
+        requestAnimationFrame(animateCursor);
+    </script>
+</body>
+
+</html>

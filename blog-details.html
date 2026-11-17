@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Details | Rumon</title>
+    <link rel="icon" type="image/png" href="Assets/fav icon.png">
+
+    <!-- External Resources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Component CSS -->
+    <link rel="stylesheet" href="container/header/header.css">
+    <link rel="stylesheet" href="container/footer/footer.css">
+    <link rel="stylesheet" href="blog-details.css">
+
+    <style>
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            z-index: 99999;
+            pointer-events: none;
+            will-change: transform;
+            transform: translate3d(-50%, -50%, 0);
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #b057d5;
+        }
+
+        .cursor-outline {
+            width: 38px;
+            height: 38px;
+            border: 2px solid rgba(176, 87, 213, 0.5);
+        }
+
+        @media (pointer: coarse) {
+            .cursor-dot,
+            .cursor-outline {
+                display: none !important;
+            }
+            body, a, button, input, textarea {
+                cursor: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Page Header -->
+    <div id="header-container"></div>
+
+    <section class="page-header">
+        <div class="container">
+            <h1 id="blog-main-title">Blog Details</h1>
+            <div class="breadcrumbs">
+                <a href="Index.html">Home</a>
+                <span>/</span>
+                <a href="Index.html#blog">Blog</a>
+                <span>/</span>
+                <span id="breadcrumb-current">Blog Details</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <div class="main-layout container">
+        <div class="content-area">
+            <div class="featured-image">
+                <img id="blog-featured-img"
+                    src="./Assets/1.jpg"
+                    alt="Blog Image"
+                    onerror="this.src='./Assets/1.jpg'">
+            </div>
+
+            <div class="post-meta">
+                <span><i class="far fa-user"></i> <span id="blog-author">ADMIN</span></span>
+                <span><i class="far fa-calendar"></i> <span id="blog-date">LOADING...</span></span>
+                <span class="category-tag" id="blog-category"><i class="fas fa-folder"></i> CYBER SECURITY</span>
+            </div>
+
+            <article class="blog-article">
+                <div id="blog-content-body">
+                    <p>Loading blog content...</p>
+                </div>
+            </article>
+
+            <!-- Comments Section -->
+            <section class="comment-section">
+                <div class="comments-list-wrapper">
+                    <h3 id="comments-count">Comments (0)</h3>
+                    <div id="comments-display" class="comments-display">
+                        <p class="no-comments">No comments yet. Be the first to comment!</p>
+                    </div>
+                </div>
+
+                <h3>Leave a Reply</h3>
+                <p>Your email address will not be published. Required fields are marked *</p>
+                <form class="comment-form" id="comment-form">
+                    <textarea id="comment-message" placeholder="Comment *" required></textarea>
+                    <div class="form-grid">
+                        <input type="text" id="comment-name" placeholder="Name *" required>
+                        <input type="email" id="comment-email" placeholder="Email *" required>
+                    </div>
+                    <input type="text" id="comment-website" placeholder="Website">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="save-info">
+                        <label for="save-info">Save my name, email, and website in this browser for the next time I comment.</label>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submit-comment">POST COMMENT</button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="widget search-widget">
+                <h3>Search Blogs</h3>
+                <div class="search-box">
+                    <input type="text" id="sidebar-search" placeholder="Search articles...">
+                    <button id="sidebar-search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="widget recent-posts">
+                <h3>Recent Posts</h3>
+                <div class="post-list" id="recent-posts-list">
+                    <!-- Dynamic Recent Posts -->
+                </div>
+            </div>
+
+            <div class="widget categories-widget">
+                <h3>Categories</h3>
+                <ul id="categories-list">
+                    <li><a href="#" data-filter="Cyber Security"><i class="fas fa-chevron-right"></i> Cyber Security</a></li>
+                    <li><a href="#" data-filter="Web Development"><i class="fas fa-chevron-right"></i> Web Development</a></li>
+                    <li><a href="#" data-filter="Full Stack"><i class="fas fa-chevron-right"></i> Full Stack</a></li>
+                    <li><a href="#" data-filter="Performance"><i class="fas fa-chevron-right"></i> Performance</a></li>
+                    <li><a href="#" data-filter="Zero Trust"><i class="fas fa-chevron-right"></i> Zero Trust</a></li>
+                </ul>
+            </div>
+
+            <div class="widget tags-widget">
+                <h3>Popular Tags</h3>
+                <div class="tags-cloud" id="blog-tags-cloud">
+                    <a href="#">Security</a>
+                    <a href="#">WordPress</a>
+                    <a href="#">OWASP</a>
+                    <a href="#">Performance</a>
+                </div>
+            </div>
+
+            <div class="ad-widget">
+                <div class="ad-content">
+                    <div class="ad-icon" style="font-size: 50px; margin-bottom: 20px; color: #b057d5;">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <h4 style="margin-bottom: 10px;">Securing the Future Today</h4>
+                    <p>Hackers Don't Need Keys, Just Carelessness. Build Secure Applications.</p>
+                    <button class="ad-btn" onclick="window.location.href='Index.html#contact'">
+                        <i class="far fa-paper-plane"></i> CONTACT ME
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script>
+        const IS_LOCAL_ENV = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const BACKEND_BASE_URL = IS_LOCAL_ENV ? "http://localhost:5000" : "https://portfolio-backend-h88g.vercel.app";
+        const API_BASE_URL = `${BACKEND_BASE_URL}/api`;
+        const DEFAULT_IMAGE = "./Assets/1.jpg";
+
+        const DEFAULT_BLOGS = [
+            {
+                _id: "blog_201",
+                title: "Securing Modern Web Applications: Defending Against the OWASP Top 10",
+                content: "Web application security is no longer an afterthought—it is a critical pillar of software engineering. Every day, thousands of web applications fall victim to common vulnerabilities because basic defensive coding practices are overlooked.\n\nIn this article, we dive deep into the most prevalent risks outlined in the OWASP Top 10, including Broken Access Control, Cryptographic Failures, and Injection Flaws. We will explore how modern attack vectors exploit unchecked input parameters and how developers can build resilient defense-in-depth architectures.\n\nKey countermeasures include implementing parameterized queries to neutralize SQL injection, enforcing strict Role-Based Access Control (RBAC) at the route level, and sanitizing all incoming payloads. Furthermore, integrating Automated Dynamic Application Security Testing (DAST) into continuous deployment pipelines ensures vulnerabilities are flagged before production releases.",
+                author: "Admin",
+                image: "Assets/1.jpg",
+                tags: ["Cyber Security", "OWASP", "Web Protection", "Penetration Testing"],
+                createdAt: "2026-11-14T09:00:00.000Z"
+            },
+            {
+                _id: "blog_202",
+                title: "WordPress Hardening Checklist 2026: Fortifying Against Advanced Attacks",
+                content: "Powering over 40% of the web, WordPress is undeniably the most popular CMS on the planet—and consequently the biggest target for automated exploit scanners and credential stuffers.\n\nTo keep WordPress installations rock solid, administrators must look beyond simple security plugins. Essential hardening steps begin with locking down file permissions: ensuring wp-config.php is non-writable and moving it above the public root directory.\n\nDisabling XML-RPC is crucial unless explicitly required by remote publishing apps, as attackers routinely abuse it for brute-force attacks and pingback DDoS reflection. Additionally, always hide the WordPress version number, enforce Two-Factor Authentication (2FA) for all administrator accounts, and implement automated weekly database integrity backups.",
+                author: "Admin",
+                image: "Assets/2.jpg",
+                tags: ["WordPress", "Security", "CMS", "Web Development"],
+                createdAt: "2026-11-13T09:00:00.000Z"
+            },
+            {
+                _id: "blog_203",
+                title: "Zero-Trust Architecture: Why Traditional Network Perimeters Fail",
+                content: "For decades, enterprise security relied on castle-and-moat models: perimeter firewalls kept the bad actors out, while everything inside the private network was trusted implicitly. However, the rise of cloud infrastructure and distributed remote workforces has rendered this paradigm completely obsolete.\n\nZero-Trust Architecture (ZTA) operates on one fundamental core tenet: 'Never trust, always verify'. Regardless of whether a request originates inside or outside the network perimeter, every transaction must be explicitly authenticated, authorized, and cryptographically verified.\n\nBy leveraging micro-segmentation, identity-aware proxies, and continuous posture evaluation, organizations can dramatically minimize lateral movement in the event of a breach, ensuring single compromised credentials do not jeopardize the entire infrastructure.",
+                author: "Admin",
+                image: "Assets/3.jpg",
+                tags: ["Zero Trust", "Cloud Security", "Enterprise", "Network"],
+                createdAt: "2026-11-12T09:00:00.000Z"
+            },
+            {
+                _id: "blog_204",
+                title: "100/100 Google Lighthouse: Achieving Peak Front-End Performance",
+                content: "Website speed is directly tied to conversions, bounce rates, and organic search ranking. Achieving a perfect 100/100 score on Google Lighthouse requires meticulous attention to the critical rendering path.\n\nStart by eliminating render-blocking resources: defer non-critical JavaScript and preload crucial web fonts using preconnect links. Modern CSS techniques like content-visibility: auto allow browsers to skip rendering offscreen elements until the user scrolls near them, dramatically cutting down initial DOM computation.\n\nFor animations, avoid animating layout properties like top, left, width, or height. Instead, stick strictly to transform and opacity, which run directly on the GPU compositor thread without triggering costly browser repaints.",
+                author: "Admin",
+                image: "Assets/4.jpg",
+                tags: ["Frontend", "Performance", "Optimization", "JavaScript"],
+                createdAt: "2026-11-11T09:00:00.000Z"
+            },
+            {
+                _id: "blog_205",
+                title: "RESTful API Security: Token Management, Rate Limiting & CSRF",
+                content: "Building APIs that scale reliably requires more than just clean REST design; robust security controls must be embedded into every route handler.\n\nOne common architectural mistake is storing JWT access tokens in browser localStorage, making them easily extractable via Cross-Site Scripting (XSS). A significantly more secure approach is utilizing HttpOnly, Secure, SameSite=Strict cookies coupled with short token expiration windows and rotating refresh tokens.\n\nMoreover, enforcing IP-based and user-based rate limiting via in-memory Redis stores protects sensitive endpoints (such as login and password reset) against distributed brute force attacks, while input schema validation prevents unexpected parameter pollution.",
+                author: "Admin",
+                image: "Assets/5.jpg",
+                tags: ["API Security", "Node.js", "Express", "JWT"],
+                createdAt: "2026-11-10T09:00:00.000Z"
+            },
+            {
+                _id: "blog_206",
+                title: "The Evolution of Threat Hunting: AI in Modern SOC Operations",
+                content: "As cyber threats become increasingly automated and sophisticated, security operations centers (SOCs) can no longer rely solely on static signatures and manual log inspection.\n\nArtificial Intelligence and Machine Learning models have revolutionized threat detection by baselining normal network behavior and detecting subtle telemetry deviations in real time. From spotting anomalous outbound DNS tunnels to identifying lateral credential abuse, AI-driven SIEM solutions provide analysts with actionable risk scores.\n\nBy automating repetitive triage tasks, security teams can concentrate on complex incident response and proactive adversary emulation, staying one step ahead of advanced persistent threat (APT) actors.",
+                author: "Admin",
+                image: "Assets/6.jpg",
+                tags: ["AI", "Threat Hunting", "Cyber Security", "Automation"],
+                createdAt: "2026-11-09T09:00:00.000Z"
+            }
+        ];
+
+        let loadedBlogs = [];
+        let currentActiveBlogId = null;
+
+        function resolveImageUrl(rawUrl) {
+            if (!rawUrl || typeof rawUrl !== "string") return DEFAULT_IMAGE;
+            const trimmed = rawUrl.trim();
+            if (!trimmed) return DEFAULT_IMAGE;
+            if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("data:")) return trimmed;
+            if (trimmed.startsWith("Assets/") || trimmed.startsWith("./Assets/")) return trimmed;
+            if (trimmed.startsWith("/uploads/")) return `${BACKEND_BASE_URL}${trimmed}`;
+            if (trimmed.startsWith("uploads/")) return `${BACKEND_BASE_URL}/${trimmed}`;
+            return trimmed;
+        }
+
+        function formatLongDate(value) {
+            try {
+                return new Date(value).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric"
+                }).toUpperCase();
+            } catch (e) {
+                return "NOVEMBER 2026";
+            }
+        }
+
+        function renderContent(content) {
+            const paragraphs = String(content || "")
+                .split(/\n+/)
+                .map((p) => p.trim())
+                .filter(Boolean);
+
+            if (paragraphs.length === 0) {
+                return "<p>No content available.</p>";
+            }
+
+            return paragraphs.map((p) => `<p>${p}</p>`).join("");
+        }
+
+        function renderTags(tags) {
+            const cloud = document.getElementById("blog-tags-cloud");
+            const safeTags = Array.isArray(tags) ? tags.filter(Boolean) : [];
+            if (safeTags.length === 0) {
+                cloud.innerHTML = `<a href="#">Security</a>`;
+                return;
+            }
+            cloud.innerHTML = safeTags.map((tag) => `<a href="javascript:void(0)" onclick="filterBlogsByTag('${tag}')">${tag}</a>`).join("");
+        }
+
+        function renderBlog(blog) {
+            if (!blog) return;
+            currentActiveBlogId = blog._id;
+
+            const title = blog.title || "Blog Details";
+            const image = resolveImageUrl(blog.image);
+            const tags = Array.isArray(blog.tags) ? blog.tags : [];
+            const primaryTag = tags[0] || "CYBER SECURITY";
+
+            document.title = `${title} | Rumon`;
+            document.getElementById("blog-main-title").innerText = title;
+            document.getElementById("breadcrumb-current").innerText = title;
+            document.getElementById("blog-author").innerText = (blog.author || "ADMIN").toUpperCase();
+            document.getElementById("blog-date").innerText = formatLongDate(blog.createdAt || Date.now());
+            document.getElementById("blog-featured-img").src = image;
+            document.getElementById("blog-featured-img").alt = title;
+            document.getElementById("blog-category").innerHTML = `<i class="fas fa-folder"></i> ${primaryTag.toUpperCase()}`;
+            document.getElementById("blog-content-body").innerHTML = renderContent(blog.content);
+            renderTags(tags);
+
+            // Fetch comments for this specific blog
+            fetchComments(blog._id);
+
+            // Update URL without full page reload
+            const newUrl = `${window.location.pathname}?id=${encodeURIComponent(blog._id)}`;
+            window.history.replaceState({ blogId: blog._id }, title, newUrl);
+        }
+
+        async function fetchAllBlogs() {
+            const urls = [];
+            if (IS_LOCAL_ENV) urls.push('http://localhost:5000/api/blogs');
+            urls.push('https://portfolio-backend-h88g.vercel.app/api/blogs');
+
+            for (const url of urls) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 3500);
+                    const res = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (Array.isArray(data) && data.length > 0) return data;
+                    }
+                } catch (e) {
+                    console.warn(`Failed fetching blogs from ${url}:`, e.message);
+                }
+            }
+            return DEFAULT_BLOGS;
+        }
+
+        async function fetchBlogDetails(id) {
+            // First check if already in loadedBlogs
+            const existing = loadedBlogs.find(b => String(b._id) === String(id));
+            if (existing) {
+                renderBlog(existing);
+                return;
+            }
+
+            // Try API
+            try {
+                const response = await fetch(`${API_BASE_URL}/blogs/${id}`);
+                if (response.ok) {
+                    const blog = await response.json();
+                    renderBlog(blog);
+                    return;
+                }
+            } catch (error) {
+                console.warn('API blog fetch failed, searching default list:', error.message);
+            }
+
+            // Fallback search
+            const fallbackBlog = DEFAULT_BLOGS.find(b => String(b._id) === String(id)) || DEFAULT_BLOGS[0];
+            renderBlog(fallbackBlog);
+        }
+
+        function renderRecentPosts(blogs) {
+            const recentList = document.getElementById("recent-posts-list");
+            if (!recentList) return;
+
+            recentList.innerHTML = (blogs || []).slice(0, 5).map((blog) => `
+                <div class="post-item" style="cursor: pointer;" onclick="loadSelectedBlog('${blog._id}')">
+                    <img src="${resolveImageUrl(blog.image)}" alt="${blog.title || 'Blog'}" onerror="this.src='./Assets/1.jpg'">
+                    <div class="post-info">
+                        <h4>${blog.title || "Untitled"}</h4>
+                        <span><i class="far fa-calendar"></i> ${new Date(blog.createdAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `).join("");
+
+            updateCategories(blogs);
+        }
+
+        window.loadSelectedBlog = function(blogId) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            fetchBlogDetails(blogId);
+        };
+
+        window.filterBlogsByTag = function(tag) {
+            const match = loadedBlogs.find(b => Array.isArray(b.tags) && b.tags.some(t => t.toLowerCase() === tag.toLowerCase()));
+            if (match) {
+                loadSelectedBlog(match._id);
+            }
+        };
+
+        function updateCategories(blogs) {
+            const categoriesMap = {};
+            blogs.forEach(blog => {
+                if (Array.isArray(blog.tags)) {
+                    blog.tags.forEach(tag => {
+                        categoriesMap[tag] = (categoriesMap[tag] || 0) + 1;
+                    });
+                }
+            });
+
+            const categoriesList = document.getElementById('categories-list');
+            if (categoriesList && Object.keys(categoriesMap).length > 0) {
+                categoriesList.innerHTML = Object.entries(categoriesMap).slice(0, 6).map(([cat, count]) => `
+                    <li><a href="javascript:void(0)" onclick="filterBlogsByTag('${cat}')"><i class="fas fa-chevron-right"></i> ${cat} (${count})</a></li>
+                `).join('');
+            }
+        }
+
+        async function fetchComments(blogId) {
+            const commentsDisplay = document.getElementById("comments-display");
+            const commentsCount = document.getElementById("comments-count");
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/comments/${blogId}`);
+                if (response.ok) {
+                    const comments = await response.json();
+                    renderComments(comments);
+                    return;
+                }
+            } catch (error) {
+                console.warn("Could not fetch remote comments:", error);
+            }
+
+            // Default empty or mock
+            renderComments([]);
+        }
+
+        function renderComments(comments) {
+            const commentsDisplay = document.getElementById("comments-display");
+            const commentsCount = document.getElementById("comments-count");
+
+            const safeComments = Array.isArray(comments) ? comments : [];
+            commentsCount.innerText = `Comments (${safeComments.length})`;
+
+            if (safeComments.length === 0) {
+                commentsDisplay.innerHTML = `<p class="no-comments" style="color: #a4a5b6; padding: 20px 0;">No comments yet. Be the first to share your thoughts!</p>`;
+                return;
+            }
+
+            commentsDisplay.innerHTML = safeComments.map(comment => `
+                <div class="comment-item" style="display: flex; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                    <div class="comment-avatar" style="font-size: 38px; color: #b057d5;">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="comment-content" style="flex: 1;">
+                        <div class="comment-header" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                            <h4 class="comment-author" style="color: #fff; font-size: 1.1rem; font-weight: 600;">${comment.name}</h4>
+                            <span class="comment-date" style="color: #a4a5b6; font-size: 0.85rem;">${new Date(comment.createdAt || Date.now()).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        </div>
+                        <p class="comment-text" style="color: #c5c6d0; line-height: 1.6;">${comment.message}</p>
+                        ${comment.reply ? `
+                        <div class="admin-reply" style="margin-top: 15px; padding: 15px; background: rgba(176, 87, 213, 0.1); border-left: 4px solid #b057d5; border-radius: 8px;">
+                            <div class="reply-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i class="fas fa-shield-alt" style="color: #b057d5;"></i>
+                                <span style="font-weight: 600; color: #b057d5;">Admin Reply</span>
+                            </div>
+                            <p style="color: #c5c6d0; font-size: 0.95rem;">${comment.reply}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        async function handleCommentSubmit(e) {
+            e.preventDefault();
+            if (!currentActiveBlogId) return;
+
+            const submitBtn = document.getElementById("submit-comment");
+            const originalText = submitBtn.innerText;
+
+            const name = document.getElementById("comment-name").value.trim();
+            const email = document.getElementById("comment-email").value.trim();
+            const message = document.getElementById("comment-message").value.trim();
+            const website = document.getElementById("comment-website").value.trim();
+
+            if (!name || !email || !message) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            try {
+                submitBtn.innerText = "POSTING...";
+                submitBtn.disabled = true;
+
+                let success = false;
+                try {
+                    const response = await fetch(`${API_BASE_URL}/comments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            blogId: currentActiveBlogId,
+                            name,
+                            email,
+                            message,
+                            website
+                        })
+                    });
+                    if (response.ok) success = true;
+                } catch (apiErr) {
+                    console.warn('API comment post error, falling back locally:', apiErr);
+                }
+
+                // Add to UI immediately
+                const newCommentObj = {
+                    name,
+                    message,
+                    createdAt: new Date().toISOString()
+                };
+
+                const currentDisplay = document.getElementById("comments-display");
+                const noComments = currentDisplay.querySelector(".no-comments");
+                if (noComments) currentDisplay.innerHTML = '';
+
+                const commentHtml = `
+                    <div class="comment-item" style="display: flex; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <div class="comment-avatar" style="font-size: 38px; color: #b057d5;">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="comment-content" style="flex: 1;">
+                            <div class="comment-header" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                                <h4 class="comment-author" style="color: #fff; font-size: 1.1rem; font-weight: 600;">${name}</h4>
+                                <span class="comment-date" style="color: #a4a5b6; font-size: 0.85rem;">Just now</span>
+                            </div>
+                            <p class="comment-text" style="color: #c5c6d0; line-height: 1.6;">${message}</p>
+                        </div>
+                    </div>
+                `;
+                currentDisplay.insertAdjacentHTML('afterbegin', commentHtml);
+
+                // Update count
+                const countEl = document.getElementById("comments-count");
+                const currentCount = parseInt(countEl.innerText.replace(/\D/g, '') || '0', 10);
+                countEl.innerText = `Comments (${currentCount + 1})`;
+
+                document.getElementById("comment-form").reset();
+                alert("Thank you! Your comment has been posted.");
+
+            } catch (error) {
+                console.error("Error submitting comment:", error);
+                alert("Could not post comment. Please try again.");
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function loadComponents() {
+            const components = [
+                { id: 'header-container', url: 'container/header/header.html', script: 'container/header/header.js' },
+                { id: 'footer-container', url: 'container/footer/footer.html', script: 'container/footer/footer.js' }
+            ];
+
+            for (const comp of components) {
+                try {
+                    const response = await fetch(comp.url);
+                    if (response.ok) {
+                        const html = await response.text();
+                        const el = document.getElementById(comp.id);
+                        if (el) el.innerHTML = html;
+                        if (comp.script) {
+                            const script = document.createElement('script');
+                            script.src = comp.script;
+                            document.body.appendChild(script);
+                        }
+                    }
+                } catch (error) {
+                    console.warn(`Error loading component ${comp.id}:`, error);
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            loadComponents();
+
+            // Load all blogs first so sidebar and lookups are populated
+            loadedBlogs = await fetchAllBlogs();
+            renderRecentPosts(loadedBlogs);
+
+            const params = new URLSearchParams(window.location.search);
+            let blogId = params.get("id");
+
+            if (!blogId) {
+                try {
+                    blogId = sessionStorage.getItem('selectedBlogId');
+                } catch (e) {}
+            }
+
+            // If still no blogId, default to the first available blog!
+            if (!blogId && loadedBlogs.length > 0) {
+                blogId = loadedBlogs[0]._id;
+            }
+
+            if (blogId) {
+                await fetchBlogDetails(blogId);
+            } else {
+                document.getElementById("blog-content-body").innerHTML = "<p>No blog posts found. Please check back later.</p>";
+            }
+
+            const commentForm = document.getElementById("comment-form");
+            if (commentForm) {
+                commentForm.addEventListener("submit", handleCommentSubmit);
+            }
+
+            // Sidebar search
+            const searchInput = document.getElementById("sidebar-search");
+            const searchBtn = document.getElementById("sidebar-search-btn");
+            const handleSearch = () => {
+                const q = searchInput.value.toLowerCase().trim();
+                if (!q) return;
+                const match = loadedBlogs.find(b => (b.title && b.title.toLowerCase().includes(q)) || (b.content && b.content.toLowerCase().includes(q)));
+                if (match) {
+                    loadSelectedBlog(match._id);
+                } else {
+                    alert(`No articles found matching "${q}"`);
+                }
+            };
+
+            if (searchBtn) searchBtn.addEventListener("click", handleSearch);
+            if (searchInput) {
+                searchInput.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") handleSearch();
+                });
+            }
+        });
+
+        // High-performance GPU cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        let mouseX = -100, mouseY = -100;
+        let outlineX = -100, outlineY = -100;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+        }, { passive: true });
+
+        function animateCursor() {
+            outlineX += (mouseX - outlineX) * 0.2;
+            outlineY += (mouseY - outlineY) * 0.2;
+            cursorOutline.style.transform = `translate3d(${outlineX - 19}px, ${outlineY - 19}px, 0)`;
+            requestAnimationFrame(animateCursor);
+        }
+        requestAnimationFrame(animateCursor);
+    </script>
+</body>
+
+</html>

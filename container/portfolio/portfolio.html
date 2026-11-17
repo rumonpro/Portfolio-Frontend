@@ -1,0 +1,49 @@
+<section class="portfolio-module" id="portfolio">
+    <div class="portfolio-container">
+        <!-- Header -->
+        <header class="portfolio-header">
+            <h1 class="portfolio-title">My Portfolio</h1>
+            <p class="portfolio-subtitle">Browse through my completed projects, where creativity, functionality,<br>and performance come together to deliver exceptional results.</p>
+        </header>
+
+        <!-- Grid -->
+        <div class="portfolio-grid" id="portfolioGrid">
+            <!-- Projects will be loaded here dynamically -->
+            <div class="portfolio-loading">Loading projects...</div>
+        </div>
+
+        <!-- View All Button -->
+        <div class="portfolio-actions">
+            <a href="portfolio.html" class="portfolio-btn">
+                <span>VIEW ALL PORTFOLIO</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Interactive Project Detail Modal Popup -->
+    <div class="project-modal-backdrop" id="projectModal" aria-hidden="true">
+        <div class="project-modal-content" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-image-wrapper">
+                <img id="modalImg" src="./Assets/1.jpg" alt="Project Preview" onerror="this.src='./Assets/1.jpg'">
+            </div>
+            <div class="modal-body">
+                <span class="modal-category-badge" id="modalCategory">General</span>
+                <h2 class="modal-title" id="modalTitle">Project Title</h2>
+                <div class="modal-tech-stack" id="modalTechStack"></div>
+                <p class="modal-desc" id="modalDesc">Project description goes here...</p>
+                <div class="modal-actions" id="modalActions">
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="modal-action-btn btn-live" id="modalLiveBtn">
+                        <i class="fas fa-external-link-alt"></i> Live Preview
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="modal-action-btn btn-github" id="modalGithubBtn">
+                        <i class="fab fa-github"></i> GitHub Source
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
